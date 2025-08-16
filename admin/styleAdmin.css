@@ -1,0 +1,194 @@
+*{
+    padding: 0;
+    margin: 0;
+    /* ازالة النقاط الموجود على الجدول */
+    list-style: none;
+    /* ازالة الخط من تحت الرابط */
+    text-decoration: none;
+}
+body{
+    background-color:whitesmoke;
+   
+}
+.sidebar_container{
+    /* جعل العناصر في نفس الصف */
+    display: flex;
+    position: relative;
+}
+/*// <!-- الصفحة الجانبية -->// */
+.sidebar_container .sidebar{
+    background-color: #ccc;
+    position: fixed;
+    right:20px ;
+    width:20%;
+    height: 95%;
+}
+.sidebar_container .sidebar h1{
+    color: black;
+    text-align: center;
+    margin-top: 10px;
+}
+.sidebar_container .sidebar ul li{ 
+    font-size: 18px;
+    padding: 10px;
+    /* padding: 20px; */
+    border-bottom: 1px solid #969595;
+    float: right;
+    margin-right: 20px;
+}
+.sidebar_container .sidebar ul li i{ 
+   margin-left: 20px;
+   color: black;
+}
+.sidebar_container .sidebar ul li a{
+    display: block;
+    color: black;
+    padding: 10px;
+}
+.sidebar_container .sidebar ul li a:hover{
+    background-color: #969595;
+    color: tan;
+}
+/*// <!-- الصفحة الجانبية -->// */
+/*  <!-- section --> */
+.sidebar_container .content_sec{
+    width: 70%;
+    margin-left: 40px;
+    padding: 20px;
+}
+/*------------- Form------------- */
+.sidebar_container .content_sec label{
+    display: block;
+    margin-bottom: 5px;
+    font-size: 35px;
+    margin-right: 40px;
+    text-align: right;
+}
+.sidebar_container .content_sec input{
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+}
+.sidebar_container .content_sec .add{
+    background-color: rgb(242, 243, 172);
+    border: none;
+    color: rgb(8, 8, 8);
+    padding: 15px 30px;
+    font-size: 25px;
+    cursor: pointer;
+    border-radius: 10px;
+    
+}
+.sidebar_container .content_sec .add:hover{
+    background-color: darksalmon;
+}
+/*//------------- Form-------------// */
+/*----------table---------------*/
+.sidebar_container table{
+    background-color: #bbb7b7;
+    width: 100%;
+}
+.sidebar_container table th,td{
+    font-size: 30px;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+.sidebar_container table th{
+    background-color: #969595;
+}
+.sidebar_container table i, .del_btn{
+  color: white;
+  font-size: 20px;
+  padding: 8px 18px;
+  border-radius: 2px;
+  border-radius: 10px;
+  border: 1px solid rgb(56, 55, 55);
+  margin-right: 5px;
+}
+.sidebar_container table .del_btn{
+  background-color: rgb(218, 19, 19);
+}
+.sidebar_container table .del_btn:hover{
+    background-color: #580f0f;
+}
+.sidebar_container table i{
+    color: black;
+    background-color: rgb(216, 144, 11);
+}
+.sidebar_container table i:hover{
+    background-color: rgb(126, 83, 5);
+    color: white;
+}
+/*//----------table---------------// */
+/*// <!-- section --> //*/
+
+/* <!-- social --> */
+/* nav{
+    width: 10px;
+    height: 50px;
+    background-color: rgb(169, 162, 175);
+    border-bottom: 3px solid;
+    color: white;
+}
+.social ul{
+ list-style: none;
+ margin-left: 20px;
+}
+.social ul li{
+    
+    float: left;
+    padding: 5px 10px;
+    margin-top: 10px;
+}
+.social ul li a{
+    color: white;
+}
+.social ul li a:hover{
+    color: rgb(2, 0, 3) ;
+    background-color: aliceblue;
+    padding: 5px;
+}
+.section ul{
+    list-style: none;
+   
+
+}
+.section ul li{
+    float: right;
+    padding: 15px;
+    margin-left: 5px;
+}
+.section ul li a{
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    padding: 5px 3px;
+    border-radius: 5px;
+
+}
+.section ul li a:hover{
+    background-color: blueviolet;
+    color: rgb(14, 13, 12);
+    
+} */
+/* <!-- social --> */
+
+.news-container{
+   margin-bottom: 10px;
+    height: 70px;
+    width:95%;
+    margin: 50px auto;
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+}
+.news-item{
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+    height: 100%;
+}
