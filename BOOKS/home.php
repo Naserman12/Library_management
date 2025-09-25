@@ -1,40 +1,36 @@
 <?php
-
 require_once "../file/head.php";
-// include_once '../admin/login.php';
 if(isset($_SESSION["memberId"])){
     require_once "../showNews.php";
-
 }
 else{
-    require_once "../file/head.php";
+    // require_once "../file/head.php";
     echo '<h3>سجل دخول لتتمكن من استعارة الكتب والمزيد!!<br></h3>';
 }
 // endif;
-
-
 // <!-- Search php -->
 $books = $book->searchBooks($seachTerm);
 $book = new Book($conn);
  $category = new Category($conn);
- $result = $book->getBook();
+ $result = $book->getBooks();
  ?>
- <h2 style="color:black; text-decoration:none; text-align:center;" dir="rtl"><a href="../DigiBooks/showDigiBooks.php">|الكتب الإلكترونية|</a></h2>
+ <h2 style="color:black; text-decoration:none; text-align:center; margin:8px;" dir="rtl"><a href="../DigiBooks/showDigiBooks.php">|الكتب الإلكترونية|</a></h2>
  <?php
 if($books) {
-    if(isset($seachTerm)){
-        ?>
-    <h2>نتائج البحث</h2>
-    <?php ;} ?>
-    
+    ?>
     <!-- Products div -->
     <main>
-       <?php foreach($books as $book): ?>
-                <!-- Products div -->
-                <div class="product">
+        <?php foreach($books as $book): ?>
+            <!-- Products div -->
+            <?php
+            if(isset($seachTerm) && $seachTerm){
+                ?>
+            <h2>نتائج البحث</h2>
+            <?php ;} ?>
+            <div class="product">
                 <!-- product img -->
                 <div class="product_img">
-                <a href="../Comments/showBookDetiles.php?book_id=<?php echo $book['id'];?>"><img src="<?php echo  $book['image']; ?>" alt="صورة الكتاب"></a>
+                <a href="../Comments/showBookDetiles.php?book_id=<?php echo $book['id'];?>"><img src="<?php echo  $book['image'] ?? "" ; ?>" alt="صورة الكتاب"></a>
                     <span class="unvailable"><?php if ($book['copies'] >= 5 ) {
                         echo 'متوفر';
                     }elseif($book['copies'] >0 && $book['copies'] < 5){
@@ -57,9 +53,14 @@ if($books) {
                 <!--// Product name // -->
                 <!-- Product price -->
                 <div class="product_price">
-                    <a href=""><?php echo  $book['year']; ?> :سنة النشر</a>
+                    <p>💰 السعر: <?= $dailyPrice ?> ريال / يومياً</p>
                 </div>
                 <!--// Product price // -->
+                <!-- Date -->
+                <div class="date">
+                    <a href=""><?php echo  $book['year']; ?> :سنة النشر</a>
+                </div>
+                <!--// date // -->
                 <!-- Product descrption -->
                 <div class="product_description">
                     <a href=""><i class="fa-solid fa-eye"></i><?php echo  $book['copies']; ?> :عدد النسخ</a>
@@ -83,26 +84,20 @@ if($books) {
             </div>
             <!--// Products div //-->
             <?php endforeach; ?>
-        </main>
-        <!--// Products div //-->
+     </main>
+     <!--// Products div //-->
 <?php
 }else{
     echo ' لا توجد نتيجة للبحث.<br>';
     echo '<h2> جميع الكتب<h2><br>';
-
-    // $book = new Book($conn);
-    //  $category = new Category($conn);
-    //   $result = $book->getBook();
-    
       if (mysqli_num_rows( $result)  > 0) {
-            $books = $book->getBook();
+            $books = $book->getBooks();
             // echo "<pre>";
             // var_dump($book);
             // echo "</pre>";
             ?>
             <!-- <div><?//php echo $book['id'];?></div> -->
-            <!-- Products div -->
-             
+            <!-- Products div -->  
             <main>
                 <?php 
                 foreach ($books as $book): ?>
@@ -156,13 +151,11 @@ if($books) {
         </main>
             <!--// Products div //-->
             <?php
-         
         }
         // else{
         //     echo "لا توجد كتب لعرضها";
         // }
 }
-
 ?>
 
 </form>  

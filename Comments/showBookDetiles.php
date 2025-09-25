@@ -1,86 +1,102 @@
+<?php
+require_once "../file/head.php";
+?>
+<title>تفاصيل الكتاب</title>
+
 <style>
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f5f5f5;
-}
-
-.profileContainer {
-    width: 300px;
+/* الحاوية الرئيسية */
+.showBooksContainer {
+    max-width: 800px;
+    margin: 50px auto; /* توسيط الحاوية */
+    background: #fff;
     padding: 20px;
-    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center; /* توسيط النص */
+    direction: rtl; /* اتجاه عربي */
+    font-family: "Tajawal", sans-serif;
 }
 
-.profileContainer h2 {
+/* العنوان */
+.showBooksContainer h1 {
     margin-bottom: 20px;
     color: #333;
 }
 
-.profileContainer label {
-    display: block;
-    text-align: right;
-    margin-bottom: 5px;
-    color: #666;
-    font-size: 0.9em;
-}
-
-.profileContainer input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.profileContainer button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
+/* زر الاستعارة */
+.add_to_cart {
+    display: inline-block;
+    background: #3498db;
     color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background 0.3s ease;
+    margin: 8px auto;
+    width: 300px;
 }
 
-.profileContainer button:hover {
-    background-color: #45a049;
+.add_to_cart:hover {
+    background: #2980b9;
+}
+
+/* زر إضافة تعليق */
+.showBooksContainer a[href*="addCom"] {
+    display: inline-block;
+    margin-top: 5px;
+    background: #2ecc71;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 15px;
+    width: 300px;
+}
+
+.showBooksContainer a[href*="addCom"]:hover {
+    background: #27ae60;
+}
+
+/* قسم التعليقات */
+.comments-section {
+    margin-top: 30px;
+    text-align: left;
+    direction: rtl;
 }
 </style>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عرض تفاصيل الكتاب</title>
-</head>
-<body>
-    <div class="showBooksContainer">
 
-        <?php
-require_once 'comments.php';
-$comment = new Comments($conn);
-$book_id = $_GET['book_id'];
-$comm1 = $comment->showDetils($book_id);
-$comm2 = $comment->averageRaing($book_id);
-    ?>
+<div class="showBooksContainer">
     <h1>عرض تفاصيل الكتاب</h1>
-    <a href="addCom.php?book_id=<?php echo $book_id;?>">أضافة تعليق</a>
     <?php
-    $comment->showComments($book_id);
-    ?></php>
-</div> 
-</body>
-</html>
+    require_once 'comments.php';
+    $book = new Book($conn);
+    $comment = new Comments($conn);
+    $book_id = $_GET['book_id'];
+    $book = $book->getBook($book_id);
+    $comm1 = $comment->showDetils($book_id);
+    $comm2 = $comment->averageRaing($book_id);
+    ?>
+    <!-- زر الاستعارة -->
+    <div class="submit">
+        <?php if(isset($_SESSION['memberId'])): if($book['copies'] > 0){ ?>
+            <a class="add_to_cart" href="../borrow/Borrow.php?id=<?= $book['id']; ?>"> استعارة الكتاب</a>
+        <?php } else { ?>
+            <a class="add_to_cart" onclick="return confirm('الكتاب غير متوفر')" href="#"> استعارة الكتاب</a>
+        <?php } else: ?>
+            <a class="add_to_cart" onclick="return confirm('يجب تسجيل الدخول أولا.')" href="../admin/login.php"> استعارة الكتاب</a>
+        <?php endif; ?>
+    </div>
+    <!--// زر الاستعارة //-->
+
+    <!-- عرض التعليقات -->
+    <div class="comments-section">
+        <?php $comment->showComments($book_id); ?>
+    </div>
+    <!-- زر إضافة تعليق -->
+    <a href="addCom.php?book_id=<?= $book_id; ?>">✍️ إضافة تعليق</a>
+</div>
+
+<?php
+require_once "../file/footer.php";
+?>

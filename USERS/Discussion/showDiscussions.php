@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT']. '/library/include/db_connect.php';
+// require_once $_SERVER['DOCUMENT_ROOT']. '/library/include/db_connect.php';
 require_once "Discussion.php";
 session_start();
 // if (isset($_SESSION['memberId'])) {

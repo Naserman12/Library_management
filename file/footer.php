@@ -1,8 +1,24 @@
 <script>
-    // window.addEventListener('beforeunload', function(){
-    //     navigator.sendBeacon('../USERS/logout.php')
-    // })
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleButton = document.querySelector(".user-toggle");
+    const dropdown = document.getElementById("userDropdown");
+
+    toggleButton.addEventListener("click", function (event) {
+      event.stopPropagation(); // يمنع الإغلاق الفوري
+      dropdown.classList.toggle("active"); // استخدم "active" بدل "show"
+    });
+
+    // إغلاق القائمة عند الضغط خارجها
+    window.addEventListener("click", function (event) {
+      const userMenu = document.getElementById("userMenu");
+      if (!userMenu.contains(event.target)) {
+        dropdown.classList.remove("active");
+      }
+    });
+  });
 </script>
+
+
 <!-- foooter -->
 <footer>
     <div class="google_maps">
@@ -10,7 +26,7 @@
     </div>
     <div class="copy">
         <p>
-            جيم &copy; 2024 جميع الحقوق محفوظة
+            جيم &copy; 2025 جميع الحقوق محفوظة
         </p>
     </div>
 </footer>

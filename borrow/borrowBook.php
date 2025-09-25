@@ -26,9 +26,8 @@ $stmt->execute();
 if($result->num_rows > 0) {
     echo "<h2>طلبات الاستعارة المعلقة</h2><br>";
      while ($row = $result->fetch_assoc()){
-        ?>
-       
- <table border="1">
+        ?>   
+ <table style="align-items: center; margin: 5px; " border="1" >
      <tr>
         <th>الصورة</th>
     <th>العضو</th>

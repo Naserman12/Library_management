@@ -2,19 +2,22 @@
 include '../USERS/MemberClass.php';
 session_start();
 $member = new Member($conn);
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['returnBook'])) {
-    $member->id = $_SESSION['memberId'];
-    echo   $member->id.'<br>هذا معرف العضو من صفحة الاسترجاع<br>';
 
-   if (isset($_POST['book_id'])) {
-       $bookId = $_POST['book_id'];
-       $result = $member->returnBook( $bookId );
-       if ($result) {
-           echo "تم استرجاع الكتاب بنجاح";
-           return true;
+$member->id = $_SESSION['memberId'];
+if ($member->id) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['returnBook']) && $_SESSION['memberId']) {
+    
+       if (isset($_POST['book_id'])) {
+           $bookId = $_POST['book_id'];
+           $result = $member->returnBook( $bookId );
+           if ($result) {
+               echo "تم استرجاع الكتاب بنجاح";
+               return true;
+           }
        }
-   }
+    }
 }else{
+
     echo "يرجى تسجيل الدخول أولا";
 }
 ?>

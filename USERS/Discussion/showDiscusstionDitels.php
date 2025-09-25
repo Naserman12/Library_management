@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,7 +73,6 @@
 </head>
 <body>
         <?php
-        require_once $_SERVER['DOCUMENT_ROOT']. '/library/include/db_connect.php';
         require_once "Discussion.php";
 
         session_start();

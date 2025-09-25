@@ -1,10 +1,10 @@
 <style>
     
 .news-container{
-   margin-bottom: 10px;
-    height: 70px;
+   margin-bottom: 2px;
+    height: 50px;
     width:95%;
-    margin: 50px auto;
+    margin: 16px auto;
     text-align: center;
     padding: 20px;
     background-color: white;
@@ -12,7 +12,7 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
 }
 .news-item{
-    margin-bottom: 10px;
+    margin-bottom: 4px;
     font-size: 16px;
     color: #333;
     height: 100%;
@@ -27,7 +27,6 @@
     <title>الأخبار</title>
 </head>
 <body>
-
     <div class="news-container">
         <!-- <h1> اخر التحديثات</h1> -->
         <div id="news-item" class="news-item">
@@ -52,8 +51,6 @@ function updateNews(newsData){
         newsHTML = `<h2>${newsType}</h2>`;
            
             newsHTML += `<p>${contentItem.title} - ${contentItem.author}<p> `;
-            
-       
         // تحديث المحتوى على الصفحة
         newsItem.innerHTML = newsHTML;
         // تحديث المحتوى على الصفحة
@@ -64,29 +61,27 @@ function updateNews(newsData){
         }
     }
         function fetchNews(){
-            fetch('fetchNews.php')
+         fetch('fetchNews.php')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
-            console.log(data)
         })
           .then(data =>{
-            console.log(data); 
+            // console.log(data); 
               if(data.newsData){
                   updateNews(data.newsData);  
             }else{
                 console.error('لم يتم العثور على المصفوفة.')
-            }  
-           
+            }   
         })
         .catch(error => console.error('Error fetching News: ', error));         
     }
     // console.log(newsData)
     fetchNews(); //جلب البانات عند تحميل الصفحة 
     // تحديث الدالة تلقائقيا كل 5 ثواني
-    setInterval(fetchNews, 3000);
+    setInterval(fetchNews, 5000);
     </script>
 </body>
 </html>

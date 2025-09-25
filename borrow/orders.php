@@ -33,7 +33,7 @@
     <div class="contaneir-orders">
         <a href="borrowBook.php">الكتب المستعارة.</a><br>
         <a href="return_requests.php">طلبات الاسترداد الكتب</a><br>
-        <a href="Borrow.php">استعارة كتاب صفحة المستخدم</a><br>
+        <a href="Borrow.php?id=<?php echo $row['id']; ?>">استعارة كتاب صفحة المستخدم</a><br>
         <a href="returnBook.php">طلب استرداد كتاب صفحة المستخدم</a><br>
         <a href="showBrrow.php">ملخص الكتب</a><br>
         <a href="../BOOKS/listBooks.php">صفحة عرض الكتب والعديل عليها</a>

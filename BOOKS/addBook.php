@@ -7,9 +7,6 @@
   }
 </style>
 <?php
-// include '../include/db_connect.php';
-// include 'Book.php';
-include 'category.php';
 $category = new Category($conn);
 $book = new Book($conn);
 $DigiBook = new DigitalBook($conn);
@@ -27,8 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $book->detil = $_POST['detil'];
       $category->name = $_POST['category_id'];
       $bookType = $_POST['bookType'];
-      
-
       //  print_r( $category->name ) ;
       // الحصول على مسار الملف المؤقت 
       $img_location = $_FILES['image']['tmp_name'];
@@ -77,28 +72,26 @@ $categories = $category->getCaty();
 <style>
         /* تنسيق أساسي */
 body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+    /* display: flex; */
+    align-items: left;
+    justify-content: left;
+    height:100vh;
     background-color: #f5f5f5;
     font-family: Arial, sans-serif;
     color: black;
 }
 
 /* تنسيق الحاوية */
-.select-container {
+select {
     width: 200px;
     text-align: center;
 }
-
-.select-container label {
+select label {
     display: block;
     margin-bottom: 8px;
     font-size: 1em;
     color: #333;
 }
-
 /* تنسيق قائمة الخيارات */
 select {
     width: 100%;
@@ -128,17 +121,11 @@ select:focus {
     border-color: #4CAF50;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
-
+form{
+  margin: 5px auto;
+  width: 650px;
+}
     </style>
-<!DOCTYPE html>
-<html lang="en" dir="rtl">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة إضافة الكتب</title>
-  </head>
-  <body>
-
     <form method="post" action="addBook.php" enctype="multipart/form-data">
       <!-- التصنيف: <input type="text" name="category" required><br> -->
        <h2>صفحة اضافة الكتب</h2>
@@ -213,5 +200,3 @@ select:focus {
             });
         })
     </script>
-  </body>
-  </html>

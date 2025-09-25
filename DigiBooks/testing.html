@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>متجري البسيط</title>
+  <style>
+    body {font-family: Tahoma; text-align: center; background: #f9f9f9;}
+    .product {border: 1px solid #ccc; border-radius: 10px; width: 250px; margin: 15px auto; padding: 15px; background: #fff;}
+    img {width: 100%; border-radius: 10px;}
+    button {background: green; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;}
+    button:hover {background: darkgreen;}
+  </style>
+</head>
+<body>
+  <h1>منتجاتي</h1>
+
+  <div class="product">
+    <img src="product1.jpg" alt="منتج 1">
+    <h2>ساعة يد</h2>
+    <p>السعر: 100 ريال</p>
+    <button onclick="order('ساعة يد')">اطلب الآن</button>
+  </div>
+
+  <div class="product">
+    <img src="product2.jpg" alt="منتج 2">
+    <h2>سماعة بلوتوث</h2>
+    <p>السعر: 150 ريال</p>
+    <button onclick="order('سماعة بلوتوث')">اطلب الآن</button>
+  </div>
+
+  <script>
+    function order(productName) {
+      const phone = "966500000000"; // ضع رقمك مع مفتاح الدولة
+      const message = `السلام عليكم، أريد طلب: ${productName}`;
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+    }
+  </script>
+</body>
+</html>

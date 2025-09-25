@@ -1,5 +1,5 @@
 <?php
-   require_once $_SERVER['DOCUMENT_ROOT']. '/library/include/db_connect.php';
+   require_once $_SERVER['DOCUMENT_ROOT']. '/include/db_connect.php';
 //    <--===========كلاس المناقشات=========-->
 class Discussion{
     private $conn;
@@ -106,9 +106,12 @@ public function addComment($discussion_id,$memberId, $content){
      $content = $this->conn->real_escape_string($content);
     $sql = "INSERT INTO ".$this->table." (discussion_id, member_id, content, created_at) VALUES ($discussion_id, $memberId, '$content', NOW())";
 
-    if ($this->conn->query($sql) === TRUE) {
+    if ($sql) {
         echo "تم إضافة التعليق بنجاح";
         header( "REFRESH:3; URL = showDiscussions.php");
+            // echo "<pre>";
+            //  var_dump($sql);
+            //  echo "</pre>";
     }else{
         echo "خطأ: " . $sql . "<br>" . $this->conn->error;
     }

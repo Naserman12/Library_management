@@ -1,22 +1,21 @@
 <?php
 
-// use function PHPSTORM_META\type;
-// include '../USERS/MemberClass.php';
-    require_once $_SERVER['DOCUMENT_ROOT']. '/library/include/db_connect.php';
+    require_once $_SERVER['DOCUMENT_ROOT']. '/include/db_connect.php';
     // include 'category.php';
     // <----------كلاس الكتب--------->
     
     class Book{
         private $conn;
         // الخصائص
-        public $id;
-        public $title;
-        public $author;
-        public $category;
-        public $detil;
-        public $year;
-        public $copies;
-        public $img;
+        public $id
+        , $title
+        , $author
+        , $category
+        , $detil
+        , $year
+        , $copies
+        , $img
+        , $price;
         public function __call($methode, $params){
                 echo "The method [ " .$methode."] Not Found  Or Bot Accessible<br>";
                 print_r($params);
@@ -39,20 +38,8 @@
             $result = $stmt->get_result();
             return $result->fetch_all(MYSQLI_ASSOC);
         }
-    //   <//-------- اضافة البحث--------//>
-    
-    
-    //   <-------- اضافة كتب-------->
-    // public function addBook(){
-    //     $query = "INSERT INTO books (title, author, category, year, copies, ) VALUES ('$this->title', '$this->author', '$this->category', '$this->year', '$this->copies')";
-    //     $stmt = $this->conn->prepare($query);
-    //     // $stmt->bind_Param("sssii", $this->title, $this->author, $this-> $this->category, $this->year, $this->copies);
-    //     if ($stmt->execute()) {
-    //        return true;
-    //     }
-    //     return false;
-    // }      
-    // <-------- اضافة كتب-------->
+        //   <//-------- اضافة البحث--------//>
+// <-------- اضافة كتب-------->
 public function addBook($title, $author, $year, $categoryName, $detil, $copies, $img, $bookType){
     // var_dump($category_id);
     $sql = "INSERT INTO books (title, author, year, category, detil,  copies, image, bookType) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -63,7 +50,6 @@ public function addBook($title, $author, $year, $categoryName, $detil, $copies, 
     
     return true;
 }
-// <//-------- اضافة كتب--------//>
     //   <--//-------- اضافة كتب--------//-->
     //   <-------- تعديل الكتب--------->
       public function updateBook( $title, $author, $category, $year, $detil, $copies,  $img, $id){
@@ -80,14 +66,6 @@ public function addBook($title, $author, $year, $categoryName, $detil, $copies, 
         if (!$stmt->execute()) {
             throw new Exception("'errror'". $this->conn->error);
         }
-       
-        // $title = $this->title;
-        // $author = $this->author;
-        // $category = $this->category;
-        // $year = $this->year;
-        // $copies = $this->copies;
-        // $img = $this->img;
-        // $id = $this->id;
 
         $stmt->execute();
         return true;
@@ -113,7 +91,7 @@ public function addBook($title, $author, $year, $categoryName, $detil, $copies, 
       }
     //   <--//------حذف-------//-->
     //   <--------عرض الكتب --------->
-        public function getBook(){
+        public function getBooks(){
             $query = "SELECT * FROM books";
             $result = mysqli_query($this->conn, $query);
             return $result;
@@ -121,7 +99,7 @@ public function addBook($title, $author, $year, $categoryName, $detil, $copies, 
     //   <--//------عرض الكتب -------//-->
 
     // <------جلب معرف الكتب------->
-public function getBookId($id) {
+public function getBook($id) {
   // تحضير الاستعلام لجلب الكتاب بناءً على المعرف
   $query = "SELECT * FROM books WHERE id = ?";
   $stmt = $this->conn->prepare($query);
@@ -130,10 +108,6 @@ $stmt->bind_param("i", $id);
 // تنفيذ الاستعلام
 $stmt->execute();
 $result = $stmt->get_result();
-if (!$result) {
-    echo '$stmt Doing..';
-    // throw new Exception('Error preparing query: '. $stmt->error);
-}
 return $result->fetch_assoc();
 // التحقق من وجود البيانات
 }
@@ -160,15 +134,6 @@ Class DigitalBook extends Book{
     public $readLink;
     public function __construct($db){
         $this->conn = $db;
-        // parent::__construct($id, $title, $author, $year, $category, $detil, $copies, $img);
-        // $id, $title, $author, $year, $category,  $detil, $copies, $img, $downloadLink, $reanLink
-        // $this->id = $id;
-        // $this->title = $title;
-        // $this->author = $author;
-        // $this->year = $year;
-        // $this->category = $category;
-        // $this->downloadLink = $downloadLink;
-        // $this->readLink = $reanLink;
     }
     //   <-------- اضافة البحث-------->
         public function searchDigiBooks($books){
@@ -185,7 +150,6 @@ Class DigitalBook extends Book{
 
         }
     //   <//-------- اضافة البحث--------//>
-    
     public function downloadBook(){
         echo 'Download link: '. $this->downloadLink. '<br>';
     }
@@ -217,13 +181,10 @@ Class DigitalBook extends Book{
         // var_dump($stmt);
         $stmt->bind_Param('s', $title);
         $stmt->execute();
-
                 // الحصول على النتيجة
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-
         $stmt->close();
-
         // إرجاع true إذا كان الكتاب موجودًا
         return $row['count'] > 0;
     }
@@ -249,6 +210,8 @@ Class DigitalBook extends Book{
         }
     }
     }
+
+    // Testing
 //     $newBook1 = new Book($conn);
 //     $newBook = new DigitalBook($conn, $id = 1,
 //      $title = "gh", $author = "gg", $year = "ff",

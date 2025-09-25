@@ -102,7 +102,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             <label>
                 <input type="radio" name="avatar" value="woman2.png">
                 <img src="../USERS/profileUser/ImageAvater/woman2.png" alt="Avatar 1" width="50" height="50">
-                
             </label><br>
             <button type="submit">التسجيل</button>
     </div>

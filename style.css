@@ -1,114 +1,97 @@
 *{
     margin: 0;
     padding: 0;
-    
-
 }
 body{
     background-color:whitesmoke;
 }
-header{
-    
-    background-color: rgb(145, 4, 100);
-    height: 110px;
-    width: 100%;
-    /* position: fixed;
-    z-index: 1000; */
+.container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
 }
-.logo h1 {
-    /* 
-    float: right;
-    color: #000;
-    margin-right: 5px;
-    font-size: 15px;
-    font-weight: 900;
-    margin-top: 10px;
-    text-align: center;
-    text-shadow: 3px  3px 3px black;
-    height: 48%; */
-    
-    /* بعد تقسيم الشاشة */
-    
-    float: right;
-    color: #f5efef;
-    margin-right: 5px;
-    font-size: 28px;
-    font-weight: 900;
-    margin-top: 5px;
-    text-align: center;
-    text-shadow: 3px 3px 3px black; 
+header{
+    background: linear-gradient(135deg, rgb(145, 4, 100) 0%, #8a2be2 100%);
+    color: white;
+    /* background-color: rgb(145, 4, 100); */
+    padding: 15px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+}
+ .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.logo h1 {   
+   font-size: 1.8rem;
+            font-weight: 700;
     
 }
 .logo h1 a{
     text-decoration: none;
     color: #ffffff; 
+    
+    
 }
 .logo h1 a:hover{
     color: rgb(139, 134, 134);
 
 }
-
-.logo img{
-    background-color: rgb(145, 4, 100);
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    float: right;
-    margin-top: 10px;
-    
-}
+.logo img {
+            height: 50px;
+            width: auto;
+            border-radius: 8px;
+        }
 .search{
-    float: left;
-    margin-top: 10px;
-    margin: 5px;
+     flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
     
 }
+ .search_bar {
+            display: flex;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
 .search_input{
-        padding: 5;
-    width: 200px;
-    color: #000;
-    font-size: 15px;
-    border: 1px solid;
-    height: 22;
-    /* قبل تقسيم الشاشة */
-    /* padding: 5px;
-    width: 250px;
-    color: #000;
-    font-size: 10px;
-    border: 1px solid;
-    margin-top: 5px; */
+        flex: 1;
+            padding: 12px 20px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            background: transparent; 
+            text-align: right;
 }
 .search_btn{
-    /* width: 75px;
-    height: 40px;
-    padding:  15px;
-    background-color:rgb(29, 3, 53);
-    border-radius: 5px;
-    color: aliceblue;
-    cursor: pointer; */
-        height: 28%;
-        padding: 5px;
-        background-color: rgb(29, 3, 53);
-        border-radius: 5px;
-        color: aliceblue;
-        cursor: pointer;    
+        padding: 12px 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;   
+            border-radius: 40px;
+            align-items: center;
+            gap: 5px;
     }
-    .search_btn:hover{
-    height: 28%;
-    padding:  5px;
-    background-color: rgb(145, 4, 100);
-    border-radius: 5px;
-   font-size: 20px;
+.search_btn:hover{
+        height: 88%;
+    padding:  12px;
+   font-size: 18px;
+   background-color: rgb(145, 4, 100);
     cursor: pointer;
-
 }
-/* nav{
-    width: 100%;
-    height: 50px;
-    background-color: rgb(29, 3, 53);
-    border-bottom: 3px solid;
-    color: white;
-} */
 .social ul{
     background-color: #000;
     height: 10px;
@@ -180,57 +163,172 @@ header{
  border-radius: 10px;
 bottom: 50%;
 }
-.cart ul{
+/* قسم المستخدم */
+.cart{
+    display: flex;
+    align-items: center;
+}
+.cart u {
     list-style: none;
+    display: flex;
+    align-items: center;
     margin: 0;
     padding: 0;
-
 }
 .cart ul li{
-    display: inline;
-    margin-left: 15px;
-    padding: 5px;
-    font-size: 30px;
+    margin:  5px;
+}
+        /* .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        } */
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        
+        .user-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            margin-top: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .user-dropdown a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.3s;
+            gap: 10px;
+        }
+        
+        .user-dropdown a:hover {
+            background: #f0f5ff;
+            color: #4a6fa5;
+        }
+        
+        .user-dropdown a i {
+            width: 20px;
+        }
+        
+ /* التصميم المتجاوب */
+        @media (max-width: 992px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            .search {
+                order: 3;
+                max-width: 100%;
+                margin: 15px 0 0;
+                width: 100%;
 
-}
-.cart ul li a{
-   
-    color: rgb(7, 9, 143);
-}
-.cart ul li a:hover{
-    
-    color: blueviolet;
-}
-.cart-icon{
-    position: relative;
-    display: inline-block;
-}
-.cart_count{
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: rgb(252, 33, 33);
-    color: white;
-    padding: 4px 6px;
-    border-radius: 50%;
-    font-size: 18px;
-}
-
+            }
+        }
+        @media (max-width: 768px) {
+            .logo h1 {
+                font-size: 1.4rem;
+            }
+            .search_bar{
+                padding: 5px;
+            }
+            .search_input{
+                padding: 0;
+                margin: 0;
+            }
+            .search_btn{
+                padding: 0;
+                margin: 0;
+            }
+            .user-section {
+                gap: 15px;
+            }
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .logo {
+                flex: 1;
+            }
+            .search_bar{
+                padding: 5px;
+            }
+            .search_input{
+                padding: 0;
+                margin: 0;
+            }
+            .search_btn{
+                padding: 0;
+                margin: 0;
+            }
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .user-dropdown {
+                left: auto;
+                right: 0;
+            }
+            
+            .book-item img {
+                height: 200px;
+            }
+        }
+        
 /*---------products------*/
 main{
     display: flex;
     flex-wrap: wrap;
+     max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            
 }
 .product{
     /* يسمح لنا باضافة عنصر او صورة */
     position: relative;
-    margin: 10px;
-    margin-top: 50px;
+    margin: 10px auto;
     padding: 20px;
     width: 200px;
     border: 1px solid;
     box-shadow: 0 5px 10px rgb(0, 0, 0,1);
-    margin-bottom: 40px;
     overflow: hidden;
 }
 .product a{
@@ -241,12 +339,20 @@ main{
     margin: 4px;
 }
 .product_img{
-    text-align: center;  
+    text-align: center;
+    width: 200px;
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    background-color: #f0f0f0;
+    align-items: center;
+  
 }
-.product_img img{
-    width: 180px;
-    height: 158px;
-    border-radius: 10px;
+.product_img a img{
+    width: 100%;
+    height: 100%;
+    /* border-radius: 10px; */
+    object-fit: cover;
 }
 .product_img:hover{
     opacity: 0.7;
@@ -263,15 +369,14 @@ main{
     margin-top: 15px;
     text-align: center;
 }
-.product_price{
+.date{
     text-align: center;
     margin-top: 5px
 }
-.product_price a{
+.date a{
     color: orange;
     font-size: 18px;
     font-weight: bold;
-
 }
 .product_description{
     text-align: center;
@@ -300,12 +405,7 @@ color: #000;
     padding: 4px;
     color: red; 
 }
-/* input[type='number']{
-    font-size: 15px;
-    border: 1px solid #ccc;
-    padding: 4px;
-    color: #000; 
-} */
+
 .qty_count_add{
     background-color: #ccc;
     border: none;
@@ -351,42 +451,24 @@ footer{
     width: 100%;
     height: 200px;
     padding: 4px;
-
 }
-
 footer p{
     text-align: center;
     height: 10%;
     margin-bottom: 15px;
     font-size: 25px;
 }
-.Edtbtn{
-    direction:ltr;
-    
-
-}
+ .Edtbtn {
+      direction:ltr;
+      display: inline-block;
+      margin: 5px;
+      padding: 10px 15px;
+      background-color: yellow;
+      color: #fff;
+      border-radius: 5px;
+      text-decoration: none;
+    }
 .Edtbtn:hover{
     background-color:rgb(228, 226, 222);
 }
 /*----------// foooter//-------- */
-/*---------- News Fetching-------- */
-/* .news-container{
-    margin-bottom: 10px;
-     height: 70px;
-     width:95%;
-     margin: 50px auto;
-     text-align: center;
-     padding: 20px;
-     background-color: white;
-     border-radius: 10px;
-     box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
- }
- .news-item{
-     margin-bottom: 10px;
-     font-size: 16px;
-     color: #333;
-     height: 100%;
- } */
-/*----------// News Fetching//-------- */
-
-

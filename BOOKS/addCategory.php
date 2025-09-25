@@ -10,12 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $categoryName = $_POST['catyName'];
      $category->name =  $categoryName;
      $category->saveCaty( $category->name);
-    // $catyName = $_POST['catyName'];
-    // echo 'ccategory ='. $catyName .'h2'. $catyName ;
-    // $category->addCategory($category->name);
-    // // if (isset('catyName')) {
-    //     $category->saveCaty();
-    // }
 }
 ?>
 
@@ -28,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <h1>اضافة تصنيف جديد</h1>
-
     <form action="addCategory.php" method="POST">
     <label for="catyName">اسم التصنيف </label><br>
     <input type="text" name="catyName" required><br>

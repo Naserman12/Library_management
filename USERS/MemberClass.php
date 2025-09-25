@@ -7,7 +7,7 @@
 <?php
 //  include '../include/db_connect.php';
 //  require_once '../BOOKS/Book.php';
- require $_SERVER['DOCUMENT_ROOT']. '/library/BOOKS/Book.php';
+ require $_SERVER['DOCUMENT_ROOT']. '/BOOKS/Book.php';
 //  <--------كلاس الاعضاء-------->
 class Member{
     public $conn;

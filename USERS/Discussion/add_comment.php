@@ -1,17 +1,19 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT']. '/library/include/db_connect.php';
+// require_once $_SERVER['DOCUMENT_ROOT']. '/library/include/db_connect.php';
 require_once "Discussion.php";
 session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (isset($_SESSION['memberId'])) {
         $comment = new Comments($conn);
+        $discussion_id = $_POST['discussion_id'];
         $memberId = $_SESSION['memberId'];
         $content = $_POST['comment_content'];
-        $discussion_id = $_POST['discussion_id'];
         $addComment = $comment->addComment($discussion_id, $memberId, $content);
-        if(!$addComment){
-           echo "حدث خطأ لم يتم اضافة التعليق!."; 
+        if($addComment){
+            //  echo "<pre>";
+            //  var_dump($addComment);
+            //  echo "</pre>";
         }
     }else{
         echo "يرجى تسجيل الدخول حتى تتمكن من التعليق!!.";

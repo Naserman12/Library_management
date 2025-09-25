@@ -56,7 +56,22 @@ session_destroy();
     .card:hover {
         transform: scale(1.05);
     }
-    
+    /* التصميم على الشاشات الصغيرة (الجوال) */
+    @media (max-width: 600px) {
+        .container {
+            flex-direction: column; /* يخلي العناصر تحت بعض */
+            align-items: center; /* يوسطن البطاقات */
+            gap: 15px; /* مسافة بين كل بطاقة */
+        }
+        .card {
+            width: 80%;   /* تملى أغلب عرض الشاشة */
+            max-width: 300px;
+            height: auto;
+        }
+        .card p {
+            margin-top: 10px;
+        }
+    }
    </style>
 </head>
 <body>

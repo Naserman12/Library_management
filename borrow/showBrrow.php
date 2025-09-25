@@ -51,7 +51,6 @@ if ($result->num_rows > 0) {
                        <td>'.$row['total_return_status'].'</td>
                     </tr>';
                 }
-             
             }else{
             $summary .= "<tr><td colspan='1'>لا توجد بيانات متاحة.</td></tr>";
             }

@@ -51,26 +51,26 @@ body{
 }
 /*// <!-- الصفحة الجانبية -->// */
 /*  <!-- section --> */
-.sidebar_container .content_sec{
+.content_sec{
     width: 70%;
     margin-left: 40px;
     padding: 20px;
 }
 /*------------- Form------------- */
-.sidebar_container .content_sec label{
+.content_sec label{
     display: block;
     margin-bottom: 5px;
     font-size: 35px;
     margin-right: 40px;
     text-align: right;
 }
-.sidebar_container .content_sec input{
+.content_sec input{
     width: 100%;
     padding: 15px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
 }
-.sidebar_container .content_sec .add{
+.content_sec .add{
     background-color: rgb(242, 243, 172);
     border: none;
     color: rgb(8, 8, 8);
@@ -80,25 +80,25 @@ body{
     border-radius: 10px;
     
 }
-.sidebar_container .content_sec .add:hover{
+.content_sec .add:hover{
     background-color: darksalmon;
 }
 /*//------------- Form-------------// */
 /*----------table---------------*/
-.sidebar_container table{
+.content_sec table{
     background-color: #bbb7b7;
     width: 100%;
 }
-.sidebar_container table th,td{
-    font-size: 30px;
-    padding: 8px;
+.content_sec table th,td{
+    font-size: 22px;
+    padding: 2px;
     text-align: center;
     border: 1px solid #ddd;
 }
-.sidebar_container table th{
+.content_sec table th{
     background-color: #969595;
 }
-.sidebar_container table i, .del_btn{
+.content_sec table i, .del_btn{
   color: white;
   font-size: 20px;
   padding: 8px 18px;
@@ -107,17 +107,17 @@ body{
   border: 1px solid rgb(56, 55, 55);
   margin-right: 5px;
 }
-.sidebar_container table .del_btn{
+.content_sec table .del_btn{
   background-color: rgb(218, 19, 19);
 }
-.sidebar_container table .del_btn:hover{
+.content_sec table .del_btn:hover{
     background-color: #580f0f;
 }
-.sidebar_container table i{
+.content_sec table i{
     color: black;
     background-color: rgb(216, 144, 11);
 }
-.sidebar_container table i:hover{
+.content_sec table i:hover{
     background-color: rgb(126, 83, 5);
     color: white;
 }
@@ -191,4 +191,34 @@ body{
     font-size: 16px;
     color: #333;
     height: 100%;
+}
+/* 
+ListBooks
+        body{
+          background-color: #565656;
+        }
+        */
+.del_btn, .edt_btn{
+ color: white;
+ font-size: 20px;
+ padding: 8px 18px;
+ border-radius: 2px;
+ border-radius: 10px;
+ border: 1px solid rgb(56, 55, 55);
+ margin-right: 5px;
+ text-decoration: none;
+}
+.del_btn{
+ background-color: rgb(218, 19, 19);
+}
+.del_btn:hover{
+   background-color: #580f0f;
+}
+.edt_btn{
+color: black;
+background-color: rgb(216, 144, 11);
+}
+.edt_btn:hover{
+background-color: rgb(126, 83, 5);
+color: white;
 }

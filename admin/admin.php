@@ -60,8 +60,6 @@ session_start();
 
 $ADemail = $_POST['email'];
 $ADpassword = $_POST['password'];
-// $ADadd = $_POST['add'];
-
 if (isset($_POST['add'])) {
     if (empty($ADemail) || empty($ADpassword)) {
         

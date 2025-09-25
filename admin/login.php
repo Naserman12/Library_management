@@ -43,8 +43,6 @@
         margin-top: 10px ;
         font-size: large;
     }
-    
-    
     </style>
   <!--//============== style================// -->
   </head>
@@ -52,7 +50,6 @@
     <main>
 <?php
 include '../USERS/MemberClass.php';
-
 // session_start();
 $member = new Member($conn);
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -88,7 +85,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         <a href="logout.php">تسجيل الخروج</a>
         <?php
         }
-    
     }else{
         ?>
 <form method="POST">

@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
         body{
             text-align: center;
             align-items: center;
@@ -31,26 +31,18 @@
 h3 {
     background-color:white ;
 }
-    </style>
+    </style> -->
 <?php
-session_start();
+// session_start();
 // include '../USERS/MemberClass.php';
-include '../BOOKS/Book.php';
-
+include_once '../BOOKS/Book.php';
 // <---------جلب الاعضاء منن قاعدة البيانات-------->
 $sql = "SELECT id, name, email, phone, role FROM member";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
       ?>
-      <!DOCTYPE html>
-      <html lang="ar" dir="rlt">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>صفحة الاعضاء</title>
-      </head>
-      <body>
+        <div class="content_sec"> 
           <h1>صفحة عرض الاعضاء</h1>
           <table>
           <tr>
@@ -94,5 +86,4 @@ if ($result->num_rows > 0) {
     <h3><a href="../Reports/book_reports.php">ملخص المكتب.</a></h3>
     </tr>
     </table>
-          </body>
-          </html>
+    </div>

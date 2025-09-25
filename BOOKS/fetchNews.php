@@ -2,7 +2,6 @@
 include '../include/db_connect.php';
 function fetchingNews($conn) {
     $sql = "SELECT id, title, author, image, created_at FROM books WHERE is_featured = 1 ORDER BY  created_at DESC LIMIT 3";
-//  echo $sql;
  $result = $conn->query($sql);
  if ($result === false){
     die('error !!!!!!!!'. $conn->error);
@@ -11,7 +10,6 @@ function fetchingNews($conn) {
         $books =[];
         while($row = $result->fetch_assoc()){
         $books[] = $row;
-        // echo $row['author'];
         }
     }
         // يمكن جلب المزيد من الكتب (مثلاً آخر 5 كتب عادية)
