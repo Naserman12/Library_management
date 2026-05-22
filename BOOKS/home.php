@@ -1,174 +1,192 @@
 <?php
 require_once "../file/head.php";
+
 if(isset($_SESSION["memberId"])){
     require_once "../showNews.php";
-}
-else{
-    // require_once "../file/head.php";
+}else{
     echo '<h3>سجل دخول لتتمكن من استعارة الكتب والمزيد!!<br></h3>';
 }
-// endif;
-// <!-- Search php -->
+
+/* =========================
+   🔧 1. تعديل البحث هنا
+   ========================= */
 $book = new Book($conn);
- $category = new category($conn);
- $books = (isset($seachTerm) && $seachTerm) ? $book->searchBooks($seachTerm) : null;
- $result = $book->getBooks();
- ?>
- <h2 style="color:black; text-decoration:none; text-align:center; margin:8px;" dir="rtl"><a href="../DigiBooks/showDigiBooks.php">|الكتب الإلكترونية|</a></h2>
- <?php
-if($books) {
-    ?>
-    <!-- Products div -->
-    <main>
-        <?php foreach($books as $book): ?>
-            <!-- Products div -->
-            <?php
-            if(isset($seachTerm) && $seachTerm){
-                ?>
-            <h2>نتائج البحث</h2>
-            <?php ;} ?>
-            <div class="product">
-                <!-- product img -->
-                <div class="product_img">
-                <a href="../Comments/showBookDetiles.php?book_id=<?php echo $book['id'];?>"><img src="<?php echo  $book['image'] ?? "" ; ?>" alt="صورة الكتاب"></a>
-                    <span class="unvailable"><?php if ($book['copies'] >= 5 ) {
-                        echo 'متوفر';
-                    }elseif($book['copies'] >0 && $book['copies'] < 5){
-                         echo"<span style='background-color: none; width: 6px; height: 5px'> متوفر بكمية <span>";
-                         }else{
-                            echo "غير متوفر!!.";
-                         }
-                          ?></span>
-                </div>
-                <!-- // product img// -->
-                <!-- product_section -->
-                <div class="product_section">
-                    <a href=""><?php echo  $book['author']; ?></a>
-                </div>
-                <!--// product_section// -->
-                <!-- Product name -->
-                <div class="product_name">
-                    <a href=""><?php echo  $book['title']; ?></a>
-                </div>
-                <!--// Product name // -->
-                <!-- Product price -->
-                <div class="product_price">
-                    <p>💰 السعر: <?= $dailyPrice ?> ريال / يومياً</p>
-                </div>
-                <!--// Product price // -->
-                <!-- Date -->
-                <div class="date">
-                    <a href=""><?php echo  $book['year']; ?> :سنة النشر</a>
-                </div>
-                <!--// date // -->
-                <!-- Product descrption -->
-                <div class="product_description">
-                    <a href=""><i class="fa-solid fa-eye"></i><?php echo  $book['copies']; ?> :عدد النسخ</a>
-                </div>
-                <!--// Product description // -->
-                <!-- Add To cart -->
-                <div class="submit">
-                    <?php if(isset($_SESSION['memberId'])): if($book['copies'] > 0){?>
-                        <a class="add_to_cart" name="borrow" href="../borrow/Borrow.php?id=<?php echo $book['id'];?>">استعارة الكتاب</a>
-                 </div>
-                    <div class="submit">
-                        <?php  }else{?>
-                        <a class="add_to_cart"  onclick="return confirm('الكتاب غير متوفر')" name="borrow" href="#">استعارة الكتاب</a>
-                        <?php }else :  ?>
-                        <a class="add_to_cart"  onclick="return confirm('يجب تسجيل الدخول أولا.')" name="borrow" href="../admin/login.php">استعارة الكتاب</a>
-                      <?php
-                      endif;
-                     ?>
-                     </div>
-                <!--// Add To cart //-->
-            </div>
-            <!--// Products div //-->
-            <?php endforeach; ?>
-     </main>
-     <!--// Products div //-->
+$category = new category($conn);
+
+$searchTerm = $seachTerm ?? null;
+
+if (!empty($searchTerm)) {
+    $books = $book->searchBooks($searchTerm);
+} else {
+    $books = $book->getBooks();
+}
+
+?>
+
+<h2 style="color:black; text-decoration:none; text-align:center; margin:8px;" dir="rtl">
+    <a href="../DigiBooks/showDigiBooks.php">|الكتب الإلكترونية|</a>
+</h2>
+
 <?php
-}else{
-    if (!empty($seachTerm)) {
-    echo ' لا توجد نتيجة للبحث.<br>';
+/* =========================
+   🔧 2. إزالة mysqli_num_rows بالكامل
+   ========================= */
+
+if (!empty($books)) {
+?>
+
+<main>
+
+    <?php if (!empty($searchTerm)): ?>
+        <h2>نتائج البحث</h2>
+    <?php endif; ?>
+
+    <?php foreach($books as $book): ?>
+
+    <div class="product">
+
+        <div class="product_img">
+            <a href="../Comments/showBookDetiles.php?book_id=<?php echo $book['id']; ?>">
+                <img src="<?php echo $book['image'] ?? ''; ?>" alt="صورة الكتاب">
+            </a>
+
+            <span class="unvailable">
+                <?php
+                if ($book['copies'] >= 5) {
+                    echo 'متوفر';
+                } elseif ($book['copies'] > 0) {
+                    echo 'متوفر بكمية';
+                } else {
+                    echo 'غير متوفر';
+                }
+                ?>
+            </span>
+        </div>
+
+        <div class="product_section">
+            <a href=""><?php echo $book['author']; ?></a>
+        </div>
+
+        <div class="product_name">
+            <a href=""><?php echo $book['title']; ?></a>
+        </div>
+
+        <div class="product_price">
+            <p>💰 السعر: <?= $dailyPrice ?? 4 ?> ريال / يومياً</p>
+        </div>
+
+        <div class="date">
+            <a href=""><?php echo $book['year']; ?> :سنة النشر</a>
+        </div>
+
+        <div class="product_description">
+            <a href="">
+                <i class="fa-solid fa-eye"></i>
+                <?php echo $book['copies']; ?> :عدد النسخ
+            </a>
+        </div>
+
+        <div class="submit">
+
+            <?php if(isset($_SESSION['memberId'])): ?>
+
+                <?php if($book['copies'] > 0): ?>
+                    <a class="add_to_cart" href="../borrow/Borrow.php?id=<?php echo $book['id']; ?>">
+                        استعارة الكتاب
+                    </a>
+                <?php else: ?>
+                    <a class="add_to_cart" onclick="return confirm('الكتاب غير متوفر')" href="#">
+                        استعارة الكتاب
+                    </a>
+                <?php endif; ?>
+
+            <?php else: ?>
+                <a class="add_to_cart" onclick="return confirm('يجب تسجيل الدخول أولا.')" href="../admin/login.php">
+                    استعارة الكتاب
+                </a>
+            <?php endif; ?>
+
+        </div>
+
+    </div>
+
+    <?php endforeach; ?>
+
+</main>
+
+<?php
+} else {
+
+    echo '<h2>جميع الكتب</h2>';
+
+    $allBooks = $book->getBooks();
+
+    if (!empty($allBooks)) {
+?>
+
+<main>
+
+    <?php foreach ($allBooks as $book): ?>
+
+    <div class="product">
+
+        <div class="product_img">
+            <img src="<?php echo $book['image']; ?>" alt="">
+        </div>
+
+        <div class="product_section">
+            <a href=""><?php echo $book['author']; ?></a>
+        </div>
+
+        <div class="product_name">
+            <a href=""><?php echo $book['title']; ?></a>
+        </div>
+
+        <div class="product_price">
+            <a href=""><?php echo $book['year']; ?> :سنة النشر</a>
+        </div>
+
+        <div class="product_description">
+            <a href="">
+                <i class="fa-solid fa-eye"></i>
+                <?php echo $book['copies']; ?> :عدد النسخ
+            </a>
+        </div>
+
+        <div class="submit">
+
+            <?php if(isset($_SESSION['memberId'])): ?>
+
+                <?php if($book['copies'] > 0): ?>
+                    <a class="add_to_cart" href="../borrow/Borrow.php?id=<?php echo $book['id']; ?>">
+                        استعارة الكتاب
+                    </a>
+                <?php else: ?>
+                    <span>غير متوفر</span>
+                <?php endif; ?>
+
+            <?php else: ?>
+                <a class="add_to_cart" onclick="return confirm('يجب تسجيل الدخول أولا.')" href="../admin/login.php">
+                    استعارة الكتاب
+                </a>
+            <?php endif; ?>
+
+        </div>
+
+    </div>
+
+    <?php endforeach; ?>
+
+</main>
+
+<?php
+    } else {
+        echo "لا توجد كتب لعرضها";
     }
-    echo '<h2> جميع الكتب<h2><br>';
-      if (mysqli_num_rows( $result)  > 0) {
-            $books = $book->getBooks();
-            // echo "<pre>";
-            // var_dump($book);
-            // echo "</pre>";
-            ?>
-            <!-- <div><?//php echo $book['id'];?></div> -->
-            <!-- Products div -->  
-            <main>
-                <?php 
-                foreach ($books as $book): ?>
-                    <!-- Products div -->
-                    <div class="product">
-                    <!-- product img -->
-                    <div class="product_img">
-                    <img src="<?php echo  $book['image']; ?>" alt=""><a href=""></a>
-                    <span class="unvailable"><?php if ($book['copies'] >= 5 ) {
-                        echo 'متوفر';
-                    }elseif($book['copies'] >0 && $book['copies'] < 5){
-                       echo"<span style='background-color: none; width: 6px; height: 5px'> متوفر بكمية <span>";
-                         }else{
-                            echo "غير متوفر!!.";
-                         }
-                          ?></span>
-                   </div>
-                    <!-- // product img// -->
-                    <!-- product_section -->
-                    <div class="product_section">
-                        <a href=""><?php echo  $book['author']; ?></a>
-                    </div>
-                    <!--// product_section// -->
-                    <!-- Product name -->
-                    <div class="product_name">
-                        <a href=""><?php echo  $book['title']; ?></a>
-                    </div>
-                    <!--// Product name // -->
-                    <!-- Product price -->
-                    <div class="product_price">
-                        <a href=""><?php echo  $book['year']; ?> :سنة النشر</a>
-                    </div>
-                    <!--// Product price // -->
-                    <!-- Product descrption -->
-                    <div class="product_description">
-                        <a href=""><i class="fa-solid fa-eye"></i><?php echo  $book['copies']; ?> :عدد النسخ</a>
-                    </div>
-                    <!--// Product description // -->
-                    <!-- Add To cart -->
-                    <div class="submit">
-                         <?php if(isset($_SESSION['memberId'])){ if($book['copies'] > 0){?>
-                         <a class="add_to_cart" name="borrow" href="../borrow/Borrow.php?id=<?php echo $book['id']; ?>">استعارة الكتاب</a>
-                        <?php }else{ echo "الكتب غير متوفر حاليا!!";}  }else { ?>
-                            <a class="add_to_cart"  onclick="return confirm('يجب تسجيل الدخول أولا.')" name="borrow" href="../admin/login.php">استعارة الكتاب</a>
-                          <?php ; } ?>
-                   </div>
-                    <!--// Add To cart //-->
-                <!-- // Products div // -->
-            </div>
-            <?php endforeach; ?>
-        </main>
-            <!--// Products div //-->
-            <?php
-        }
-        // else{
-        //     echo "لا توجد كتب لعرضها";
-        // }
 }
 ?>
 
-</form>  
-</div>
-</div><br><br>
-<a dir="rtl" style="text-decoration: none; color:black; font-size:28px; text-align:center; " class="Edtbtn" href="../process_request.php">ملاحظات ||</a>
-<a dir="rtl" style="text-decoration: none; color:black; font-size:28px; text-align:center; " class="Edtbtn" href="../USERS/Discussion/showDiscussions.php">المناقشات..</a>
-<?php
-//   الغاء الاتصال بقاعدة البيانات 
- 
+<a href="../process_request.php">ملاحظات ||</a>
+<a href="../USERS/Discussion/showDiscussions.php">المناقشات..</a>
 
-include ("../file/footer.php");
-// mysqli_close($conn);
-?>
+<?php include ("../file/footer.php"); ?>

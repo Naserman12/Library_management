@@ -17,13 +17,11 @@ try {
         $user,
         $pass
     );
-
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 } catch (PDOException $e) {
     die("Connection Failed: " . $e->getMessage());
 }
 // $conn = mysqli_connect('localhost','root','','Libey') or die('فشل الاتصال بقاعدة البيانات');
 // // إعدادات بايبال
-// require_once "config.php";
+require_once "config.php";
 ?>
