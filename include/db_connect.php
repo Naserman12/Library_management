@@ -6,11 +6,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
-$host = $_ENV['DB_HOST'];
-$user = $_ENV['DB_USERNAME'];
-$pass = $_ENV['DB_PASSWORD'];
-$name = $_ENV['DB_DATABASE'];
-$port = $_ENV['DB_PORT'];
+$host = getenv('DB_HOST');
+$user = getenv('DB_USERNAME');
+$pass = getenv('DB_PASSWORD');
+$name = getenv('DB_DATABASE');
+$port = getenv('DB_PORT');
 $conn = new mysqli($host, $user, $pass, $name, $port);
 
 if ($conn->connect_error) {
