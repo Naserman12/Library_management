@@ -87,8 +87,8 @@ header{
     }
 .search_btn:hover{
         height: 88%;
-    padding:  12px;
-   font-size: 18px;
+    padding:  2px;
+   font-size: 10px;
    background-color: rgb(145, 4, 100);
     cursor: pointer;
 }

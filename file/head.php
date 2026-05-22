@@ -1,6 +1,8 @@
 <?php
 session_start();
-require_once $_SERVER['DOCUMENT_ROOT']. '/BOOKS/category.php';
+// require_once $_SERVER['DOCUMENT_ROOT']. '/../BOOKS/category.php';
+require_once __DIR__ . '/../BOOKS/category.php';
+
 // require_once $_SERVER['DOCUMENT_ROOT']. '/library/USERS/MemberClass.php';
 $dailyPrice = 4;
 ?>
@@ -13,7 +15,7 @@ $dailyPrice = 4;
     <!-- fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!--// fontawesome //-->
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="../style.css">
   </head>
   <body>
       <!-- الهيدر -->
@@ -28,7 +30,7 @@ $dailyPrice = 4;
       <!--// logo // -->
       <?php
 $book = new Book($conn);
- $category = new Category($conn); 
+ $category = new category($conn);
 
             $seachTerm = $_GET['search'] ?? null;
         ?>

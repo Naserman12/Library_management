@@ -18,6 +18,7 @@ if ($id === 0) {
 if ($id) {
     // if(isset($_POST['upload'])):
         $bookData = $book->getBookId($id);
+        $bookData = $book->getBook($id);
         $book->id = $bookData['id'];
         $book->title = $bookData['title'];
         $book->author = $bookData['author'];

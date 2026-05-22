@@ -57,10 +57,10 @@ session_start();
 <body>
     <main>
     <?php
-
-$ADemail = $_POST['email'];
-$ADpassword = $_POST['password'];
 if (isset($_POST['add'])) {
+    $ADemail = $_POST['email'] ?? '';
+    $ADpassword = $_POST['password'] ?? '';
+
     if (empty($ADemail) || empty($ADpassword)) {
         
         echo "'<script>alert ('الرجاء ادخال كلمة السر والبريد الاكتروني')</script>'";

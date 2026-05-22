@@ -9,9 +9,9 @@ else{
 }
 // endif;
 // <!-- Search php -->
-$books = $book->searchBooks($seachTerm);
 $book = new Book($conn);
- $category = new Category($conn);
+ $category = new category($conn);
+ $books = (isset($seachTerm) && $seachTerm) ? $book->searchBooks($seachTerm) : null;
  $result = $book->getBooks();
  ?>
  <h2 style="color:black; text-decoration:none; text-align:center; margin:8px;" dir="rtl"><a href="../DigiBooks/showDigiBooks.php">|الكتب الإلكترونية|</a></h2>
@@ -88,7 +88,9 @@ if($books) {
      <!--// Products div //-->
 <?php
 }else{
+    if (!empty($seachTerm)) {
     echo ' لا توجد نتيجة للبحث.<br>';
+    }
     echo '<h2> جميع الكتب<h2><br>';
       if (mysqli_num_rows( $result)  > 0) {
             $books = $book->getBooks();
@@ -170,4 +172,3 @@ if($books) {
 include ("../file/footer.php");
 // mysqli_close($conn);
 ?>
-

@@ -68,7 +68,6 @@ $result = $Digibook->getDigiBooks();
 </head>
 <body>
 <?php if ($file):
-$Digibook->views($file);
 ?>
     <!-- ✅ حالة قراءة كتاب -->
     <h1>قراءة الكتاب</h1>
@@ -91,7 +90,7 @@ $Digibook->views($file);
           <p>سنة النشر: <?php echo $book['year']; ?></p>
           <p>النوع: <?php echo $book['bookType']; ?></p>
           <a href="../<?php echo $book['file_name']; ?>" download class="download-btn">تحميل</a>
-          <a href="showDigiBooks.php?/file=<?php echo urlencode($book['file_name']); ?>" class="download-btn">قراءة</a>
+          <a href="showDigiBooks.php?file=<?php echo urlencode($book['file_name']); ?>" class="download-btn">قراءة</a>
         </div>
       <?php endforeach; ?>
     </main>

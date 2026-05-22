@@ -7,7 +7,9 @@
 <?php
 //  include '../include/db_connect.php';
 //  require_once '../BOOKS/Book.php';
- require $_SERVER['DOCUMENT_ROOT']. '/BOOKS/Book.php';
+//  require $_SERVER['DOCUMENT_ROOT']. '/BOOKS/Book.php';
+require_once __DIR__ . '/../BOOKS/Book.php';
+
 //  <--------كلاس الاعضاء-------->
 class Member{
     public $conn;
@@ -30,7 +32,7 @@ class Member{
         $result = mysqli_query($this->conn,$sql);
         if($result->num_rows > 0){
             // return 'البريد الاكتروني مسجل بالفعل!!.';
-            echo 'البريد مسجل بالفعل<br>';
+            // echo 'البريد مسجل بالفعل<br>';
             return false;
         }
         // تشفير كلمة المرور
@@ -48,11 +50,11 @@ class Member{
 
 
     if ($stmt->execute()) {
-        echo 'تم تسجيل المستخدم بنجاح<br>';
+    // 
         header( "REFRESH:3; URL = ../admin/login.php"); 
         return true;
     }else{
-        echo 'لم يتم تسجيل المستخدم';
+        // echo 'لم يتم تسجيل المستخدم';
         return false;
     }
 
@@ -67,7 +69,7 @@ class Member{
           $result = $this->conn->query( $sql );
         if($sql){
             // print_r($sql) ;
-            echo '<br>===============<br>';
+            // echo '<br>===============<br>';
         }
         if($result->num_rows > 0){
            
@@ -83,15 +85,15 @@ class Member{
             // echo $_SESSION['memberId']. ' هذا المعرف من صفحة الاعضاء <br>';
             // echo $this->role. ' هذا الدور من صفحة الاعضاء<br>';
             $_SESSION['user_name'] = $row['name'];
-            echo 'تم تسجيل الدخول';
+            // echo 'تم تسجيل الدخول';
             return true;
             } else{
-                echo 'كلمة السر غير صحيحة';
+                // echo 'كلمة السر غير صحيحة';
                 header( "REFRESH:2; URL = ../admin/login.php");
                 return false;
             }
         }else{
-            echo "<br>لم يتم العثور على المستخدم";
+            // echo "<br>لم يتم العثور على المستخدم";
             return false;
             }
         
