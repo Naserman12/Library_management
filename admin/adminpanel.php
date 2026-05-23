@@ -1,6 +1,8 @@
 <?php
 include_once '../BOOKS/category.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             switch ($page) {
                 case 'sections':
-                    include_once './catySection.php'; // صفحة التحكم بالأقسام
+                    include_once '../BOOKS/home.php'; // الصفحة الرئيسية
                     break;
                 case 'books':
                     include_once '../BOOKS/listBooks.php'; // صفحة التحكم بالكتب
@@ -74,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     include './news.php'; // صفحة الأخبار
                     break;
                 default:
-                    echo "<h2>مرحباً بك في لوحة التحكم</h2>";
+                    include_once './catySection.php'; // صفحة التحكم بالأقسام
                     break;
             }
             ?>

@@ -7,66 +7,75 @@
   }
 </style>
 <?php
+require_once __DIR__ . '/category.php';
+require_once __DIR__ . '/Book.php';
+// require_once __DIR__ . '/DigitalBook.php';
 $category = new Category($conn);
 $book = new Book($conn);
 $DigiBook = new DigitalBook($conn);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (isset($_POST['submit'])) {
-    if (!empty( $_POST['title']) || !empty($_POST['author']) || !empty($_POST['year']) || !empty($_POST['copies']) || !empty($_POST['detil']) || !empty( $_FILES['image'])) {
-      echo "تاكد من ملء الحقول";
-      return 0;
-    }
-      $book->title = $_POST['title'];
-      $book->author = $_POST['author'];
-      $book->year = $_POST['year'];
-      $book->copies= $_POST['copies'];
-      $book->img = $_FILES['image'];
-      $book->detil = $_POST['detil'];
-      $category->name = $_POST['category_id'];
-      $bookType = $_POST['bookType'];
-      //  print_r( $category->name ) ;
-      // الحصول على مسار الملف المؤقت 
-      $img_location = $_FILES['image']['tmp_name'];
-      // تعين مسار الوجهة النهائي
-      $img_name = $_FILES['image']['name'];
-      // ملف رفع الصور
-     $img_up = "../images/".$img_name;
-     if ($DigiBook->isBookExists($book->title)) {
-      echo "يوجد كتاب بنفس العنوان !!.";
-      return 0;
-     }else{
-     if($bookType === 'paper'){
-     $insert = $book->addBook($book->title,$book->author,$book->year, $category->name,$book->detil,$book->copies, $bookType, $img_up);
-      if ($insert) {
-        // نقل الملف من المسار المؤقت الى الوجهة
-        if(move_uploaded_file($img_location, $img_up)){
-          //  الانتقال الى صفحة اخرى JS
-          echo "<script> alert('تم إضافة الكتاب');
-          window.location.href='addBook.php';
-          </script>";
-        }else{
-          echo "لم يتم رفع الصورة بنجاح";
-         }
+    if (isset($_POST['submit'])) {
+
+        if (
+            empty($_POST['title']) ||
+            empty($_POST['author']) ||
+            empty($_POST['year']) ||
+            empty($_POST['copies']) ||
+            empty($_POST['detil']) ||
+            empty($_FILES['image']['name'])
+        ) {
+            echo "تأكد من ملء جميع الحقول";
+            return 0;
         }
-      }else{
-        $downlaodLink = $_POST['downlaodLink'];
-        $readLink = $_POST['readLink'];
-        $insert = $DigiBook->addDigiBook($book->title,$book->author,$book->year, $category->name,$book->detil,$book->copies, $bookType, $img_up, $downlaodLink, $readLink);
-        if ($insert) {
-          // نقل الملف من المسار المؤقت الى الوجهة
-          if(move_uploaded_file($img_location, $img_up)){
-            //  الانتقال الى صفحة اخرى JS
-            echo "<script> alert('تم إضافة الكتاب');
-            window.location.href='addBook.php';
-            </script>";
-          }else{
-            echo "لم يتم رفع الصورة بنجاح";
-           }
-          }
-      }
+
+        $book->title = $_POST['title'];
+        $book->author = $_POST['author'];
+        $book->year = $_POST['year'];
+        $book->copies = $_POST['copies'];
+        $book->img = $_FILES['image'];
+        $book->detil = $_POST['detil'];
+        $category->name = $_POST['category_id'];
+        $bookType = $_POST['bookType'];
+
+        $img_location = $_FILES['image']['tmp_name'];
+        $img_name = $_FILES['image']['name'];
+        $img_up = "../images/" . $img_name;
+
+        if ($DigiBook->isBookExists($book->title)) {
+            echo "يوجد كتاب بنفس العنوان !!.";
+            return 0;
+        } else {
+            if ($bookType === 'paper') {
+
+                $insert = $book->addBook($book->title, $book->author, $book->year, $category->name, $book->detil, $book->copies, $bookType, $img_up);
+
+                if ($insert) {
+                    if (move_uploaded_file($img_location, $img_up)) {
+                  header("Location: /Library/admin/adminpanel.php?page=adBook"); exit;
+
+                    } else {
+                        echo "لم يتم رفع الصورة بنجاح";
+                    }
+                }
+
+            } else {
+
+                $downlaodLink = $_POST['downlaodLink'];
+                $readLink = $_POST['readLink'];
+
+                $insert = $DigiBook->addDigiBook($book->title, $book->author, $book->year, $category->name, $book->detil, $book->copies, $bookType, $img_up, $downlaodLink, $readLink);
+
+                if ($insert) {
+                    if (move_uploaded_file($img_location, $img_up)) {
+                        header("Location: /Library/admin/adminpanel.php?page=adBook"); exit;
+                    } else {
+                        echo "لم يتم رفع الصورة بنجاح";
+                    }
+                }
+            }
+        }
     }
-  }
-} 
+}
 $categories = $category->getCaty();
   ?>
 <style>
@@ -126,7 +135,7 @@ form{
   width: 650px;
 }
     </style>
-    <form method="post" action="addBook.php" enctype="multipart/form-data">
+    <form method="post" action="/Library/BOOKS/addBook.php" enctype="multipart/form-data">
       <!-- التصنيف: <input type="text" name="category" required><br> -->
        <h2>صفحة اضافة الكتب</h2>
       <img src="../images/drink.png" alt="logo" width="250px"><br>

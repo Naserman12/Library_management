@@ -471,4 +471,28 @@ footer p{
 .Edtbtn:hover{
     background-color:rgb(228, 226, 222);
 }
+/* Alert Styles */
+.alert {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
 /*----------// foooter//-------- */

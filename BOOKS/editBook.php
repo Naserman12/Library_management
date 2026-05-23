@@ -17,7 +17,7 @@ if ($id === 0) {
 
 if ($id) {
     // if(isset($_POST['upload'])):
-        $bookData = $book->getBookId($id);
+        // $bookData = $book->getBookId($id);
         $bookData = $book->getBook($id);
         $book->id = $bookData['id'];
         $book->title = $bookData['title'];
@@ -124,6 +124,7 @@ select:focus {
             <label for="file">اختر صورة</label>
             <button class="edt-btn" name="upload" >رفع الصورةّ</button>
             <br><hr>
+            <button type="submit" name="edt_btn">تحديث</button>
             <!--//====================Images=================//-->
             <!-- <button type="submit" name="edt_btn">تحديث</button> -->
                 </form>

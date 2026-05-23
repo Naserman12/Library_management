@@ -1,143 +1,131 @@
 <?php
-   require_once __DIR__ . '/../../include/db_connect.php';
-//    <--===========كلاس المناقشات=========-->
-class Discussion{
+require_once __DIR__ . '/../../include/db_connect.php';
+
+class Discussion {
     private $conn;
     private $table = "discussions";
+
     public function __construct($db){
         $this->conn = $db;
-
     }
-          //   <--------حذف--------->
-          public function deleteDiscussion($id){
-            $query = "DELETE FROM ". $this->table ." WHERE id=?";
-            $stmt = $this->conn->prepare($query);
-            $stmt->bind_param("i", $id);
-            if ($stmt->execute()) {
-                // die ("Error in prepare statement: ".$this->conn->error);
-               return true;
-            }else{
-                return false;
-            }
-            // return $stmt->execute();
-          }
-        //   <--//------حذف-------//-->
-    
-public function createDiscussion( $title, $memberId, $content){
-    // تنظيف البيانات المدخلة لتجنب SQL Injection
-    // $discussion_id = $this->conn->real_escape_string($discussion_id);
-    $title = $this->conn->real_escape_string($title);
-    $memberId = $this->conn->real_escape_string($memberId);
-    $content = $this->conn->real_escape_string($content);
 
-   $sql = "INSERT INTO ".$this->table." (title, member_id, content, created_at) VALUES ('$title', $memberId,  '$content', NOW())";
-//    echo "<pre>";
-//    var_dump($sql);
-//    echo "</pre>";
+    // حذف مناقشة
+    public function deleteDiscussion($id){
+        $query = "DELETE FROM " . $this->table . " WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
 
-   if ($this->conn->query($sql) === TRUE) {
-       echo "تم إضافة التعليق بنجاح";
-       header( "REFRESH:3; URL = Add_discussion.php");
-   } else {
-    echo "لقد حدث خطأ لم يتم إضافة المنشور.";
-    //    echo "خطأ: " . $sql . "<br>" . $this->conn->error;
-   }
-   
-   // إغلاق الاتصال
-   // $this->conn->close();
-}
-// جلب مناقشة بتعليقاتها
-public function getDiscussionWithComments($discussion_id) {
-    // جلب تفاصيل المناقشة
-    $discussion_query = "SELECT discussions.id, discussions.title, discussions.content, discussions.created_at, member.name
-                        FROM discussions
-                        JOIN member ON discussions.member_id = member.id
-                        ORDER BY discussions.created_at DESC";
-    $discussion_result = mysqli_query($this->conn,  $discussion_query);
-    // var_dump($discussion_result);
-    $discussions = mysqli_fetch_All($discussion_result, MYSQLI_ASSOC );
+    // إنشاء مناقشة جديدة
+    public function createDiscussion($title, $memberId, $content){
+        $query = "INSERT INTO " . $this->table . " (title, member_id, content, created_at)
+                  VALUES (:title, :memberId, :content, NOW())";
 
-        // جلب تفاصيل المناقشة حسب المعرف
-        $discussion_query = "SELECT discussions.id, discussions.title, discussions.content, discussions.created_at, member.name
-        FROM discussions
-        JOIN member ON discussions.member_id = member.id
-        WHERE discussions.id = $discussion_id
-        ORDER BY discussions.created_at DESC";
-        $discussion_result = mysqli_query($this->conn,  $discussion_query);
-        // var_dump($discussion_result);
-        $discussion = mysqli_fetch_All($discussion_result, MYSQLI_ASSOC );
-    
-    // جلب التعليقات المرتبطة
-    
-        $comments_query = "   SELECT discussion_comments.content, discussion_comments.created_at, member.name 
-                                FROM discussion_comments 
-                                JOIN member ON discussion_comments.member_id = member.id 
-                                WHERE discussion_comments.discussion_id = $discussion_id
-                                ORDER BY discussion_comments.created_at DESC
-                                ";
-        $comments_result = mysqli_query($this->conn,  $comments_query);
-        if ($comments_result && mysqli_num_rows($comments_result) > 0) {
-            $comments = mysqli_fetch_All($comments_result, MYSQLI_ASSOC); // جلب بيانات المناقشة
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":title", $title);
+        $stmt->bindParam(":memberId", $memberId, PDO::PARAM_INT);
+        $stmt->bindParam(":content", $content);
+
+        if ($stmt->execute()) {
+            echo "تم إضافة المنشور بنجاح";
+            header("REFRESH:2; URL=Add_discussion.php");
         } else {
-            $comments = []; // تعيين مصفوفة فارغة في حال عدم وجود تعليقات
+            echo "حدث خطأ أثناء إضافة المنشور";
         }
+    }
 
-    return ['discussions' => $discussions, 'discussion' => $discussion, 'comments' => $comments ];
+    // جلب المناقشة + التعليقات
+    public function getDiscussionWithComments($discussion_id){
+
+        // جلب جميع المناقشات
+        $query = "SELECT d.id, d.title, d.content, d.created_at, m.name
+                  FROM discussions d
+                  JOIN member m ON d.member_id = m.id
+                  ORDER BY d.created_at DESC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // جلب مناقشة واحدة
+        $query = "SELECT d.id, d.title, d.content, d.created_at, m.name
+                  FROM discussions d
+                  JOIN member m ON d.member_id = m.id
+                  WHERE d.id = ?
+                  ORDER BY d.created_at DESC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $discussion_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $discussion = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // جلب التعليقات
+        $query = "SELECT c.content, c.created_at, m.name
+                  FROM discussion_comments c
+                  JOIN member m ON c.member_id = m.id
+                  WHERE c.discussion_id = ?
+                  ORDER BY c.created_at DESC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $discussion_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return [
+            'discussions' => $discussions,
+            'discussion'  => $discussion,
+            'comments'    => $comments
+        ];
+    }
 }
-}
-//    <//--===========كلاس المناقشات=========--//>
-// <--======كلاس التعليقات على المناقشات=====-->
-class Comments{
+class Comments {
     private $conn;
     private $table = "discussion_comments";
-    
+
     public function __construct($db){
         $this->conn = $db;
-}
-
-
-public function addComment($discussion_id,$memberId, $content){
-    if (empty($content)) {
-        return "محتوى التعليق لا يمكن أن يكون فارغًا.";
     }
-     // تنظيف البيانات المدخلة لتجنب SQL Injection
-     $discussion_id = $this->conn->real_escape_string($discussion_id);
-     $memberId = $this->conn->real_escape_string($memberId);
-     $content = $this->conn->real_escape_string($content);
-    $sql = "INSERT INTO ".$this->table." (discussion_id, member_id, content, created_at) VALUES ($discussion_id, $memberId, '$content', NOW())";
 
-    if ($sql) {
-        echo "تم إضافة التعليق بنجاح";
-        header( "REFRESH:3; URL = showDiscussions.php");
-            // echo "<pre>";
-            //  var_dump($sql);
-            //  echo "</pre>";
-    }else{
-        echo "خطأ: " . $sql . "<br>" . $this->conn->error;
+    public function addComment($discussion_id, $memberId, $content){
+        if (empty($content)) {
+            return "محتوى التعليق لا يمكن أن يكون فارغًا.";
+        }
+
+        $query = "INSERT INTO " . $this->table . " (discussion_id, member_id, content, created_at)
+                  VALUES (:discussion_id, :memberId, :content, NOW())";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":discussion_id", $discussion_id, PDO::PARAM_INT);
+        $stmt->bindParam(":memberId", $memberId, PDO::PARAM_INT);
+        $stmt->bindParam(":content", $content);
+
+        if ($stmt->execute()) {
+            echo "تم إضافة التعليق بنجاح";
+            header("REFRESH:2; URL=showDiscussions.php");
+        } else {
+            echo "حدث خطأ أثناء إضافة التعليق";
+        }
     }
-    
-    // إغلاق الاتصال
-    // $this->conn->close();
-}
-public function showComments($bookId){
-    // $bookId = $_GET['book_id'];
-    // جلب التعليقات المرتبطة بالكتاب
-    $comments_Query = "SELECT * FROM comments WHERE book_id = $bookId";
-    $comments_result = mysqli_query($this->conn, $comments_Query);
-            ?>
-           
-            <h3>التعليقات</h3>
-            <?php if(mysqli_fetch_assoc($comments_result)): ?>
-            <?php while($comment = mysqli_fetch_assoc($comments_result)): ?>
-                <p><?php echo $comment['comment']; ?></p>
-            <p><strong>القييم:</strong> <?php echo $comment['rating'];?>/5</p>
-            <hr>
-            <?php endwhile; else: echo 'لا توجد تعليقات.';  endif;  ?>
-            
 
-            <?php
-}
+    public function showComments($bookId){
+        $query = "SELECT * FROM comments WHERE book_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $bookId, PDO::PARAM_INT);
+        $stmt->execute();
 
+        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo "<h3>التعليقات</h3>";
+
+        if (!empty($comments)) {
+            foreach ($comments as $comment) {
+                echo "<p>{$comment['comment']}</p>";
+                echo "<p><strong>التقييم:</strong> {$comment['rating']}/5</p>";
+                echo "<hr>";
+            }
+        } else {
+            echo "لا توجد تعليقات.";
+        }
+    }
 }
-// <//--======كلاس التعليقات  على الناقشات=====--//>
-?>

@@ -1,12 +1,27 @@
 <?php
-// بناء جلسة
 session_start();
-// حدف لكل المنشن التي تم حفظها داخل الموقع
-session_unset();
-// تدمير الجلسة
-session_destroy();
-// mysqli_close($conn);
+
+// إذا كان المستخدم مسجل دخول
+if (isset($_SESSION['memberId'])) {
+
+    // إذا كان مدير
+    if ($_SESSION['role'] === 'admin') {
+        header("Location: ./admin/adminpanel.php");
+        exit;
+    }
+
+    // إذا كان عضو عادي
+    if ($_SESSION['role'] === 'members') {
+        header("Location: ./BOOKS/home.php");
+        exit;
+    }
+}
+
+// إذا لم يكن مسجل دخول → تحويله لصفحة تسجيل الدخول
+header("Location: ./admin/login.php");
+exit;
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

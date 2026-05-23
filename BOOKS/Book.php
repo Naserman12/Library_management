@@ -1,7 +1,8 @@
 <?php
-
     // require_once $_SERVER['DOCUMENT_ROOT']. '/include/db_connect.php';
     require_once __DIR__ . '/../include/db_connect.php';
+    require_once __DIR__ . '/../include/flash.php';
+    
     // include 'category.php';
     // <----------كلاس الكتب--------->
     
@@ -240,37 +241,46 @@ Class DigitalBook extends Book{
         echo 'Download link: '. $this->downloadLink. '<br>';
         echo 'Read online link: '.$this->readLink . '<br>';
     }
-    public function isBookExists($title){
-        $query ="SELECT COUNT(*)  AS count FROM books WHERE title = ?";
-        var_dump($query);
-        $stmt = $this->conn->prepare($query);
-        if (!$stmt) {
-            // عرض خطأ mysqli إذا فشل التحضير
-            echo "Failed to prepare statement: " . $this->conn->error;
-            return false;
-        }
-        // var_dump($stmt);
-        $stmt->bind_Param('s', $title);
-        $stmt->execute();
-                // الحصول على النتيجة
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $stmt->close();
-        // إرجاع true إذا كان الكتاب موجودًا
-        return $row['count'] > 0;
-    }
-    public function addDigiBook($title, $author, $year, $categoryName, $detil, $copies=5, $img, $bookType, $downloadLink, $readLink){
-        $sql = "INSERT INTO books (title, author, year, category, detil, copies, image, bookType, downloadLink, readLink) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        // echo "<pre>";
-        // var_dump($sql);
-        // echo "</pre>";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('sssssissss', $title, $author, $year, $categoryName, $detil, $copies, $bookType, $img,  $downloadLink, $readLink);
-       $stmt->execute();
-       echo 'تم إضافة االكتاب.';
-       header( "REFRESH:3; URL = addBook.php");
-       return TRUE;
-    }
+ public function isBookExists($title){
+    $query = "SELECT COUNT(*) AS count FROM books WHERE title = ?";
+    $stmt = $this->conn->prepare($query);
+
+    // ربط المتغير
+    $stmt->bindParam(1, $title, PDO::PARAM_STR);
+
+    // تنفيذ
+    $stmt->execute();
+
+    // جلب النتيجة
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row['count'] > 0;
+}
+
+public function addDigiBook($title, $author, $year, $categoryName, $detil, $copies = 5, $img, $bookType, $downloadLink, $readLink)
+{
+    $sql = "INSERT INTO books 
+            (title, author, year, category, detil, copies, image, bookType, downloadLink, readLink) 
+            VALUES (:title, :author, :year, :category, :detil, :copies, :img, :bookType, :downloadLink, :readLink)";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $stmt->execute([
+        ':title'        => $title,
+        ':author'       => $author,
+        ':year'         => $year,
+        ':category'     => $categoryName,
+        ':detil'        => $detil,
+        ':copies'       => $copies,
+        ':img'          => $img,
+        ':bookType'     => $bookType,
+        ':downloadLink' => $downloadLink,
+        ':readLink'     => $readLink
+    ]);
+
+    return true;
+}
+
     public function getDigiBooks(){
         $sql = "SELECT * FROM books WHERE bookType ='Digi'";
         $result = mysqli_query($this->conn, $sql);

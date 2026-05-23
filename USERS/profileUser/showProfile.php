@@ -2,25 +2,23 @@
 session_start();
 require_once "../../include/db_connect.php";
 if(!isset($_SESSION['memberId'])){
-    echo "سجل دخول لعرض هذه الصفحة!!.";
+    setFlash('error', 'يجب تسجيل الدخول لعرض هذه الصفحة!!.');
     header( "REFRESH:3; URL = ../../admin/login.php");
 }
  
         // جلب بيانات المستخدم من قاعدة البيانات
     $memberId = $_SESSION['memberId'];
-    $query = "SELECT name, email, avatar, phone FROM member WHERE id = $memberId";
-    $result = $conn->query($query);
-    $user = $result->fetch_assoc();
-    // $pathavataer = $user['avatar'];
-    // القيمة بالكلاس
-    // echo " <pre>";
-    // var_dump($user['avatar']);
-    // echo " </pre>";
-    // القيمة في مصفوفة
-    // echo " <pre>";
-    // print_r($user['email']);
-    // echo " </pre>";
-   
+    $query = "SELECT name, email, avatar, phone 
+            FROM member 
+            WHERE id = :id";
+
+    $stmt = $conn->prepare($query);
+
+    $stmt->execute([
+        'id' => $memberId
+    ]);
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 <?php //echo "<img src='ImageAvater/".$user['avatar']."' alt='صورة شخصية'><br>" ?>
@@ -95,8 +93,17 @@ body {
 <body>
     <div class="profileContainer">
 
+        <?php
+require_once __DIR__ . '/../../include/flash.php';
+
+$flash = getFlash();
+if ($flash):
+?>
+    <div class="alert <?= $flash['type']; ?>">
+        <?= $flash['message']; ?>
+    </div>
+<?php endif; ?>
         <h1>بيانات المستخدم</h1>
-       
             <form action="updateProfile.php" method="post">
             <a href="updateAvatar.php"><?php echo "<img src='ImageAvater/".$user['avatar']."' alt='صورة شخصية'  width='80' height='80'>"; ?></a><br>
         

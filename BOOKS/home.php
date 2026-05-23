@@ -36,7 +36,16 @@ if (!empty($books)) {
 ?>
 
 <main>
+    <?php
+require_once __DIR__ . '/../include/flash.php';
 
+$flash = getFlash();
+if ($flash):
+?>
+    <div class="alert <?= $flash['type']; ?>">
+        <?= $flash['message']; ?>
+    </div>
+<?php endif; ?>
     <?php if (!empty($searchTerm)): ?>
         <h2>نتائج البحث</h2>
     <?php endif; ?>

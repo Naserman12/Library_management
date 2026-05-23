@@ -89,7 +89,13 @@ class Member{
     ]);
 
     if ($result) {
-        header("Location: ../admin/login.php");
+        setFlash('success', 'تم تسجيل الدخول بنجاح');
+        header("Location: ../home.php");
+        return true;
+    } else {
+
+        setFlash('error', 'حدث خطأ أثناء تسجيل المستخدم');
+        return false;
         exit;
     }
 
@@ -154,10 +160,11 @@ class Member{
         $_SESSION['role'] = $user['role'];
         $_SESSION['user_name'] = $user['name'];
 
+        setFlash('success', 'تم تسجيل الدخول بنجاح');
         return true;
 
     } else {
-        header("Location: ../admin/login.php");
+        setFlash('error', 'كلمة السر غير صحيحة');
         return false;
     }
 }
@@ -165,9 +172,6 @@ class Member{
             // return false; // لم يتم العثور على مستخدم بنفس البريد الالكتروني
         // }
 
-        
-
-    
     // <//---------دالة تسجيل دخول الاعضاء--------//>
     // <---------دالة تسخيل الخروج-------->
     public function logout(){
@@ -178,7 +182,7 @@ class Member{
         session_unset(); #إزالة جميع متغيرات الجلسة
         // انهاء الجلسة مع حذف البيانات المخرنة وتسجيل الخروج
         session_destroy();
-
+        setFlash('success', 'تم تسجيل الخروج بنجاح');
         // نقل المستخدم الى صفحة تسجيل الدخول
         return true;
     }
@@ -254,7 +258,7 @@ class Member{
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($result) > 0) {
-        echo 'تم استعارة الكتاب مسبقاً';
+        setFlash('error', 'تم استعارة الكتاب مسبقاً');
         header("REFRESH:3; URL = ../BOOKS/home.php");
         return false;
     }
@@ -274,7 +278,7 @@ class Member{
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($row['totalBorrowed'] >= $maxBookAllowed) {
-        echo 'لقد تجاوزت الحد المسموح به';
+        setFlash('error', 'لقد تجاوزت الحد المسموح به');
         return false;
     }
 
@@ -304,7 +308,7 @@ class Member{
         $updateStmt->execute([
             ':id' => $book_id
         ]);
-
+        setFlash('success', 'تم استعارة الكتاب');
         return 'تم استعارة الكتاب';
     }
 
@@ -382,7 +386,7 @@ public function returnBook($bookId){
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($result) === 0) {
-        echo 'لم تقم باستعارة هذا الكتاب';
+        setFlash('error', 'لم تقم باستعارة هذا الكتاب');
         return false;
     }
 
@@ -411,7 +415,8 @@ public function returnBook($bookId){
         ':id' => $bookId
     ]);
 
-    echo "تم إرجاع الكتاب.";
+    setFlash('success', 'تم إرجاع الكتاب.');
+    header("REFRESH:3; URL = ../BOOKS/home.php");
     return true;
 }
 // <//---------returnBook--------//>
@@ -464,11 +469,12 @@ public function updateBorrowStatus($bookId, $status){
     $current = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$current) {
-        echo "السجل غير موجود";
+        setFlash('error', 'السجل غير موجود');
         return;
     }
 
-    echo "الحالة الحالية: " . $current['borrow_status'];
+    setFlash('success', "الحالة الحالية: " . $current['borrow_status']);
+    
 
     $sql = "UPDATE borrow_records 
             SET borrow_status = :status 
@@ -481,7 +487,7 @@ public function updateBorrowStatus($bookId, $status){
         ':id' => $bookId
     ]);
 
-    echo "تم تحديث الحالة.";
+    setFlash('success', 'تم تحديث الحالة.');
 }
 // <//--==========تحديث حالة الطلب==========--//>
 // <--==========تأكيد استرجاع الكتب==========-->
@@ -500,7 +506,7 @@ public function confirmReturn($bookId){
     ]);
 
     if ($result) {
-        echo "تم تأكيد الاسترجاع بنجاح";
+        setFlash('success', 'تم تأكيد الاسترجاع بنجاح');
         return true;
     }
 
@@ -543,46 +549,50 @@ $stmt->close();
 }
 //  <//--=========عرض بيانات المستخدم=========--//>
 //  <--=========تحدبث بيانات المستخدم=========-->
-public function updateProfile( $name, $email, $phone, $avatar, $user_id){
-        // استعلام لجلب آخر وقت تم فيه تعديل رقم الجوال
-        $stmt = $this->conn->prepare("SELECT last_phone_update FROM member WHERE id = ?");
-        $stmt->bind_param("i", $_SESSION['memberId']); // ربط مع قيمة id
-        $stmt->execute();
-        $result = $stmt->get_result(); // جلب النتائج
-        $row = $result->fetch_assoc(); // جلب الصف كـ مصفوفة
-        if ($row) {
-            $lastUpdate = $row['last_phone_update'];
-            // تاؤيخ اخر تحديث
-            $lastUpdateTime = new DateTime($lastUpdate);
-            // التاريخ الحالي
-            $currentTime = new DateTime();
-            // معرفة هل الوقت مناسب لتغير الرقم
-            $interval = $lastUpdateTime->diff($currentTime);
-            
-            // تحقق إذا مر يوم على آخر تعديل
-            if ($interval->days < 1 && $lastUpdate != null) {
-                echo "يمكنك تعديل البيانات مرة وحدة في كل  24 ساعة.";
-                header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
-            } else {
-                // تحديث بيانات المستخدم في قاعدة البيانات
-                $query = "UPDATE member SET name = ?, email = ?, phone = ?, avatar =?, last_phone_update = NOW() WHERE id = ?";
-                $stmt = $this->conn->prepare($query);
-                $stmt->bind_param("ssssi", $name, $email, $phone, $avatar,  $user_id);
-            
-                if ($stmt->execute()) {
-                    echo "تم تحديث البيانات بنجاح!";
-                 //    header("Location: showProfile.php");
-                    header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
-                    exit();
-                } else {
-                    echo "حدث خطأ أثناء تحديث البيانات.";
-                }
-                // هنا يمكن إضافة كود التعديل
-            }
+public function updateProfile($name, $email, $phone, $avatar, $user_id){
+
+    $stmt = $this->conn->prepare("SELECT last_phone_update FROM member WHERE id = ?");
+    $stmt->bindParam(1, $_SESSION['memberId'], PDO::PARAM_INT);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row) {
+
+        $lastUpdate = $row['last_phone_update'];
+        $lastUpdateTime = new DateTime($lastUpdate);
+        $currentTime = new DateTime();
+        $interval = $lastUpdateTime->diff($currentTime);
+
+        if ($interval->days < 1 && $lastUpdate != null) {
+            setFlash('error', 'يمكنك تعديل البيانات مرة وحدة في كل 24 ساعة.');
+            header("REFRESH:1; URL=showProfile.php");
+            exit;
         }
-   
-       $stmt->close();
+
+        $query = "UPDATE member SET name = ?, email = ?, phone = ?, avatar = ?, last_phone_update = NOW() WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(1, $name);
+        $stmt->bindParam(2, $email);
+        $stmt->bindParam(3, $phone);
+        $stmt->bindParam(4, $avatar);
+        $stmt->bindParam(5, $user_id, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            setFlash('success', 'تم تحديث البيانات بنجاح!');
+            header("REFRESH:1; URL=showProfile.php");
+
+            exit();
+        } else {
+            setFlash('error', 'حدث خطأ أثناء تحديث البيانات.');
+        }
+
+    } else {
+        setFlash('error', 'لم يتم العثور على المستخدم.');
     }
+}
+
     //  <//--=========تحدبث بيانات المستخدم=========--//>
     // <--=========تغير كلمة السر========-->
     public function changePassword($password, $newPassword, $confirmPassword){
@@ -601,16 +611,16 @@ public function updateProfile( $name, $email, $phone, $avatar, $user_id){
                 $stmt = $this->conn->prepare("UPDATE member SET password = ?  WHERE id = ?");
                 $stmt->bind_param("si", $hashedPassword, $_SESSION['memberId']);
                 $stmt->execute();
-                echo "تم تغيير كلمة السر بنجاح!";
-                header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
+                setFlash('success', 'تم تغيير كلمة السر بنجاح!');
+                // header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
                 
             } else {
-                echo "كلمة السر الجديدة وتأكيدها غير متطابقين.";
-                header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
+                setFlash('error', 'كلمة السر الجديدة وتأكيدها غير متطابقين.');
+                // header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
             }
         }else {
-            echo "كلمة السر الحالية غير صحيحة.";
-            header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
+            setFlash('error', 'كلمة السر الحالية غير صحيحة.');
+            // header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
             }
         }     
     // <//--=========تغير كلمة السر========--//>

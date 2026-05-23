@@ -4,7 +4,7 @@ include '../MemberClass.php';
 
 // التأكد من أن المستخدم مسجّل الدخول
 if (!isset($_SESSION['memberId'])) {
-    echo "سجل دخول لعرض هذه الصفحة!!.";
+    setFlash('error', 'يجب تسجيل الدخول لتحديث الملف الشخصي.');
     header( "REFRESH:3; URL = ../../admin/login.php");
     exit();
 }
@@ -15,6 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $name = $_POST['name'];
    $email = $_POST['email'];
    $phone = $_POST['phone'];
-   $avatar = $_POST['avatar'];
+   $avatar = $_FILES['avatar']['name'] ?? null;
    $curMember->updateProfile(  $name, $email, $phone, $avatar, $memberId );
 }
