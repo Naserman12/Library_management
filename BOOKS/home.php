@@ -41,12 +41,11 @@ if (!empty($books)) {
 require_once __DIR__ . '/../include/flash.php';
 
 $flash = getFlash();
-if ($flash):
-?>
-    <div class="alert <?= $flash['type']; ?>">
-        <?= $flash['message']; ?>
-    </div>
-<?php endif; ?>
+
+if ($flash) {
+    echo "<div class='{$flash['type']}'>{$flash['message']}</div>";
+}
+    ?>
     <?php if (!empty($searchTerm)): ?>
         <h2>نتائج البحث</h2>
     <?php endif; ?>
