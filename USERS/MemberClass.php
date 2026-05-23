@@ -36,7 +36,8 @@ class Member{
     $check->execute(['email' => trim($email)]);
 
     if ($check->rowCount() > 0) {
-        setFlash('error', 'البريد مستخدم مسبقاً');
+        // setFlash('error', 'البريد مستخدم مسبقاً');
+        echo "<script>alert('البريد مستخدم مسبقاً');</script>";
         return false;
     }
 
@@ -64,8 +65,9 @@ class Member{
         $_SESSION['role'] = $role;
         $_SESSION['user_name'] = $name;
 
-        setFlash('success', 'تم إنشاء الحساب بنجاح');
-
+        // setFlash('success', 'تم إنشاء الحساب بنجاح');
+        echo "تم إنشاء الحساب بنجاح";
+        header("REFRESH:3; URL = ../BOOKS/home.php");
         return true;
     }
 
@@ -126,67 +128,13 @@ public function login($email, $password)
         session_unset(); #إزالة جميع متغيرات الجلسة
         // انهاء الجلسة مع حذف البيانات المخرنة وتسجيل الخروج
         session_destroy();
-        setFlash('success', 'تم تسجيل الخروج بنجاح');
+        // setFlash('success', 'تم تسجيل الخروج بنجاح');
+        echo "تم تسجيل الخروج بنجاح";
         // نقل المستخدم الى صفحة تسجيل الدخول
         return true;
     }
     // <//---------دالة تسخيل الخروج--------//>
     // <---------دالة استعارة الكتب-------->
-    // public function borrowedBook($book_id, $memberId, $title){
-    //         // التحقق من حالة الكتاب المستعار مسبقاً
-    //         $sql = "SELECT * FROM borrow_records WHERE book_id = ? AND return_status != 'Confirmed'";
-    //         $stmt = $this->conn->prepare($sql);
-    //         $stmt->bind_param('i', $book_id);
-    //         $stmt->execute();
-    //         $result = $stmt->get_result();
-            
-    //         if ($result->num_rows > 0) {
-    //             echo 'تم استعارة الكتاب مسبقاً';
-    //             header( "REFRESH:3; URL = ../BOOKS/home.php");
-    //             return false;
-    //         }
-            
-    //     $maxBookAllowed = 3;
-    //     // التاكد من ان العضو لم يستعر اكثر من الحد المسموح به
-    //     $sql = 'SELECT COUNT(*) as totalBorrowed FROM borrow_records where member_id= ?';
-    //     $stmt = $this->conn->prepare($sql);
-    //     $stmt->bind_param('i', $memberId);
-    //     $stmt->execute();
-        
-    //     $result = $stmt->get_result();
-    //     $row = $result->fetch_assoc();
-
-    //     if ($row['totalBorrowed'] >= $maxBookAllowed) {
-    //         echo 'لقد تجاوزت الحد المسموح به';
-    //         return false;
-    //     }
-    //     // اضافة  استعارة الكتاب الى سجل المستخدم
-    //     $borrowDate = date('Y-m-d H:i:s');
-    //     // الموعد النهائي لارجاع الكتاب
-    //     $returnDate = null; 
-    //     // $returnDate = date('Y-m-d', strtotime('+1 minutes'));
-         
-    //         $sql = 'INSERT INTO borrow_records (member_id, book_id, title, borrow_date, return_date) VALUES (?, ?,?, ?, ?)';
-    //         $stmt = $this->conn->prepare($sql);
-    //         echo '<pre>';
-    //         var_dump($stmt);
-    //         echo '</pre>';
-    //         $stmt->bind_param('iisss',  $book_id, $memberId, $title, $borrowDate, $returnDate);
-    //         echo '<pre>';
-    //         print_r($stmt);
-    //         echo '</pre>';
-    //         if($stmt->execute()){
-    //             $updateSql = "UPDATE books SET copies = copies -1 WHERE id = ?";
-    //             $updateStmt = $this->conn->prepare($updateSql);
-    //                 $updateStmt->bind_param("i", $book_id);
-    //                 $updateStmt->execute();
-    //                 return 'تم استعارة الكتاب';
-    //             }else{
-    //         echo 'لم يتم العثور على  معرف الكتاب......';
-    //             }
-        
-        
-    // }
     public function borrowedBook($book_id, $memberId, $title){
 
     // التحقق من حالة الكتاب
@@ -306,7 +254,8 @@ public function returnBook($bookId){
         ':id' => $bookId
     ]);
 
-    setFlash('success', 'تم إرجاع الكتاب.');
+    // setFlash('success', 'تم إرجاع الكتاب.');
+        echo "تم إرجاع الكتاب.";
     header("REFRESH:3; URL = ../BOOKS/home.php");
     return true;
 }
@@ -320,11 +269,13 @@ public function updateBorrowStatus($bookId, $status){
     $current = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$current) {
-        setFlash('error', 'السجل غير موجود');
+        // setFlash('error', 'السجل غير موجود');
+        echo "السجل غير موجود";
         return;
     }
 
-    setFlash('success', "الحالة الحالية: " . $current['borrow_status']);
+    // setFlash('success', "الحالة الحالية: " . $current['borrow_status']);
+    echo "الحالة الحالية: " . $current['borrow_status'];
     
 
     $sql = "UPDATE borrow_records 
@@ -338,7 +289,9 @@ public function updateBorrowStatus($bookId, $status){
         ':id' => $bookId
     ]);
 
-    setFlash('success', 'تم تحديث الحالة.');
+    // setFlash('success', 'تم تحديث الحالة.');
+    echo "تم تحديث الحالة.";
+     header("REFRESH:3; URL = ../BOOKS/home.php");
 }
 // <//--==========تحديث حالة الطلب==========--//>
 // <--==========تأكيد استرجاع الكتب==========-->
@@ -357,34 +310,13 @@ public function confirmReturn($bookId){
     ]);
 
     if ($result) {
-        setFlash('success', 'تم تأكيد الاسترجاع بنجاح');
+        // setFlash('success', 'تم تأكيد الاسترجاع بنجاح');
+        echo "تم تأكيد الاسترجاع بنجاح";
         return true;
     }
 
     return false;
 }
-// public function confirmReturn($bookId){
-//         $sql = "UPDATE borrow_records SET return_status ='Confirmed', return_date = ?  WHERE id = ?";
-//         $stmt = $this->conn->prepare($sql);
-//             // الحصول على التاريخ الحالي
-//     $returnDate = date('Y-m-d H:i:s'); // صيغة التاريخ
-//         // ربط المعاملات
-//         $stmt->bind_param('si', $returnDate, $bookId);
-//         // تنفيذ الاستعلام
-//         if ($stmt->execute()) {
-//             // التحقق من عدد الصفوف التي تم تحديثها
-//             if ($stmt->affected_rows > 0) {
-//                 echo "تم تأكيد استرجاع الكتاب بنجاح.";
-//                 return true;
-//             } else {
-//                 echo "لم يتم تحديث السجل، قد لا يكون موجودًا.";
-//                 return false;
-//             }
-//         } else {
-//             echo "خطأ أثناء تنفيذ الاستعلام: " . $stmt->error;
-//             return false;
-//         }
-//     }
 // <//--==========تأكيد استرجاع الكتب==========--//>
 //  <--=========عرض بيانات المستخدم=========-->
 public function getProfile($memberId){
@@ -448,6 +380,7 @@ public function updateProfile($name, $email, $phone, $avatar, $user_id){
 
     } else {
         setFlash('error', 'لم يتم العثور على المستخدم.');
+        
     }
 }
 
@@ -471,15 +404,18 @@ public function updateProfile($name, $email, $phone, $avatar, $user_id){
                     ':password' => $hashedPassword,
                     ':id' => $_SESSION['memberId']
                 ]);
-                setFlash('success', 'تم تغيير كلمة السر بنجاح!');
+                // setFlash('success', 'تم تغيير كلمة السر بنجاح!');
+                echo "تم تغيير كلمة السر بنجاح!";
                 // header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
                 
             } else {
-                setFlash('error', 'كلمة السر الجديدة وتأكيدها غير متطابقين.');
+                // setFlash('error', 'كلمة السر الجديدة وتأكيدها غير متطابقين.');
+                echo "كلمة السر الجديدة وتأكيدها غير متطابقين.";
                 // header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
             }
         }else {
-            setFlash('error', 'كلمة السر الحالية غير صحيحة.');
+            // setFlash('error', 'كلمة السر الحالية غير صحيحة.');
+            echo "كلمة السر الحالية غير صحيحة.";
             // header( "REFRESH:3; URL = showProfile.php"); // إعادة توجيه إلى صفحة الملف الشخصي
             }
         }     

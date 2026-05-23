@@ -11,18 +11,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $member->email = $_POST['email'];
     $member->password = $_POST['password'];
     $member->avatar = $_POST['avatar'] ?? 'man.png';
-    $member->role = 'members';
     $select = $member->register(
     $member->name,
     $member->email,
     $member->avatar,
     $member->phone,
     $member->password,
-    $member->role
+    'members'
 );
    if($select){
     // setFlash('success', 'تم التسجيل بنجاح');
-    header("Location: ../BOOKS/books.php");
+    echo "تم التسجيل بنجاح";
+    header("Location: ../BOOKS/home.php");
     exit;
 } else {
     // setFlash('error', 'فشل في التسجيل');
