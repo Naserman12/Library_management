@@ -10,9 +10,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $member->email = $_POST['email'];
     $member->password = $_POST['password'];
     $member->avatar = $_POST['avatar'] ?? 'man.png';
-    $select = $member->register( $member->name, $member->email, $member->avatar ,$member->phone,$member->password,  $member->role);
+    $select = $member->register(
+    $member->name,
+    $member->email,
+    $member->avatar,
+    $member->phone,
+    $member->password,
+    'members'
+);
     if($select){
         header("Location: ../BooKS/home.php");
+        exit;
     } else {
         echo "فشل في التسجيل";
     }

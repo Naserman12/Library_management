@@ -64,8 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return;
     }
 
-    $email = htmlspecialchars($_POST['email']);
-    $password = htmlspecialchars($_POST['password']);
+  $email = trim($_POST['email']);
+$password = trim($_POST['password']);
 
     $login = $member->login($email, $password);
 

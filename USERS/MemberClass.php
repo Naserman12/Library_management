@@ -60,45 +60,50 @@ class Member{
 
         
     // }
-    public function register($name, $email, $avatar, $phone, $password, $role)
+   public function register($name, $email, $avatar, $phone, $password, $role = 'members')
 {
-    // 1. التحقق من وجود الإيميل
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
     $check = $this->conn->prepare("SELECT id FROM member WHERE email = :email");
-    $check->execute(['email' => $email]);
+    $check->execute(['email' => trim($email)]);
 
     if ($check->rowCount() > 0) {
+        setFlash('error', 'البريد مستخدم مسبقاً');
         return false;
     }
 
-    // 2. تشفير كلمة المرور
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // 3. إدخال البيانات
     $sql = "INSERT INTO member (name, email, avatar, password, phone, role)
             VALUES (:name, :email, :avatar, :password, :phone, :role)";
 
     $stmt = $this->conn->prepare($sql);
 
     $result = $stmt->execute([
-        'name' => $name,
-        'email' => $email,
-        'avatar' => $avatar,
+        'name' => trim($name),
+        'email' => trim($email),
+        'avatar' => $avatar ?: 'man.png',
         'password' => $hashedPassword,
-        'phone' => $phone,
+        'phone' => trim($phone),
         'role' => $role
     ]);
 
     if ($result) {
-        setFlash('success', 'تم تسجيل الدخول بنجاح');
-        header("Location: ../home.php");
-        return true;
-    } else {
 
-        setFlash('error', 'حدث خطأ أثناء تسجيل المستخدم');
-        return false;
-        exit;
+        $memberId = $this->conn->lastInsertId();
+
+        $_SESSION['memberId'] = $memberId;
+        $_SESSION['role'] = $role;
+        $_SESSION['user_name'] = $name;
+
+        setFlash('success', 'تم إنشاء الحساب بنجاح');
+
+        return true;
     }
 
+    setFlash('error', 'حدث خطأ أثناء التسجيل');
     return false;
 }
     //  <//--------دالة تسجيل الاعضاء--------//>
@@ -139,40 +144,47 @@ class Member{
     //         }
         
     // }
-    public function login($email, $password)
+public function login($email, $password)
 {
     if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+        session_start();
     }
 
-    $sql = "SELECT * FROM member WHERE email = :email LIMIT 1";
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute(['email' => $email]);
+    try {
 
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM member WHERE email = :email LIMIT 1";
 
-    if (!$user) {
-        return false;
-    }
+        $stmt = $this->conn->prepare($sql);
 
-    // التحقق من كلمة المرور
-    if (password_verify($password, $user['password'])) {
+        $stmt->execute([
+            ':email' => $email
+        ]);
 
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // فحص المستخدم
+        if (!$user) {
+            return false;
+        }
+
+        // التحقق من كلمة المرور
+        if (!password_verify($password, $user['password'])) {
+            return false;
+        }
+
+        // تخزين بيانات الجلسة
         $_SESSION['memberId'] = $user['id'];
         $_SESSION['role'] = $user['role'];
         $_SESSION['user_name'] = $user['name'];
 
-        setFlash('success', 'تم تسجيل الدخول بنجاح');
         return true;
 
-    } else {
-        setFlash('error', 'كلمة السر غير صحيحة');
-        return false;
+    } catch (PDOException $e) {
+
+        die("Login Error: " . $e->getMessage());
+
     }
 }
-        //  else{
-            // return false; // لم يتم العثور على مستخدم بنفس البريد الالكتروني
-        // }
 
     // <//---------دالة تسجيل دخول الاعضاء--------//>
     // <---------دالة تسخيل الخروج-------->
