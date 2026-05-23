@@ -9,26 +9,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $member->phone = $_POST['phone'];
     $member->email = $_POST['email'];
     $member->password = $_POST['password'];
-    $member->avatar = $_POST['avatar'];
+    $member->avatar = $_POST['avatar'] ?? 'man.png';
     $select = $member->register( $member->name, $member->email, $member->avatar ,$member->phone,$member->password,  $member->role);
-    // $targetDir = "../ImageAvatar";
-    // $upload = 1;
-    // $targetFile = $targetDir . basename($member->avatar['name']);
-    // $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-    // التحقق من ان الملف صولاة
-    // $check = getimagesize($member->avatar['tmp_name']);
-    // if ($check) {
-    //    $upload = 1 ;
-    // }else{
-    //     $upload = 0;
-    // }
-    // if ($upload && move_uploaded_file($member->avatar['tmp_name'], $targetFile) ) {
-    //     # حفظ مسار الصورة في قاعدة البيانات
-        // $avatarPath = $targetFile;
-       
-    // }
-    // echo '<br>================<br>';
+    if($select){
+        header("Location: ../BooKS/home.php");
+    } else {
+        echo "فشل في التسجيل";
+    }
 }else{
     echo 'لم يتم استلام البيانات';
 }
@@ -77,7 +64,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
     </style>
 <h1>تسجيل مستخدم جديد</h1>
-<form action="../BOOKS/home.php" method="POST" enctype="multipart/form-data">
+<form action="" method="POST" enctype="multipart/form-data">
     <div class=".container">
     <input class="Inpt" required placeholder="الاسم" type="text" name="name" > <br>
     <input class="Inpt" required placeholder="البريد الاكتروني" type="email" name="email"> <br>
