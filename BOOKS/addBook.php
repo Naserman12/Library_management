@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $downlaodLink = $_POST['downlaodLink'];
                 $readLink = $_POST['readLink'];
 
-                $insert = $DigiBook->addDigiBook($book->title, $book->author, $book->year, $category->name, $book->detil, $book->copies, $bookType, $img_up, $downlaodLink, $readLink);
+                $insert = $DigiBook->addDigiBook($book->title, $book->author, $book->year, $category->name, $book->detil, $book->img, $bookType, $downlaodLink, $readLink, $book->copies, );
 
                 if ($insert) {
                     if (move_uploaded_file($img_location, $img_up)) {

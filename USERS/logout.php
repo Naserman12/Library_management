@@ -1,6 +1,7 @@
 <?php
 // بدء الجلسة
 session_start();
+
 // استدعاء ملف كلاس الاعضاء
 include 'MemberClass.php';
 

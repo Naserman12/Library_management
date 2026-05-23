@@ -255,11 +255,11 @@ Class DigitalBook extends Book{
     return $row['count'] > 0;
 }
 
-public function addDigiBook($title, $author, $year, $categoryName, $detil, $copies = 5, $img, $bookType, $downloadLink, $readLink)
+public function addDigiBook($title, $author, $year, $categoryName, $detil,  $img, $bookType, $downloadLink, $readLink, $copies = 5,)
 {
     $sql = "INSERT INTO books 
-            (title, author, year, category, detil, copies, image, bookType, downloadLink, readLink) 
-            VALUES (:title, :author, :year, :category, :detil, :copies, :img, :bookType, :downloadLink, :readLink)";
+            (title, author, year, category, detil, image, bookType, downloadLink, readLink, copies) 
+            VALUES (:title, :author, :year, :category, :detil, :img, :bookType, :downloadLink, :readLink, :copies)";
 
     $stmt = $this->conn->prepare($sql);
 
@@ -269,11 +269,11 @@ public function addDigiBook($title, $author, $year, $categoryName, $detil, $copi
         ':year'         => $year,
         ':category'     => $categoryName,
         ':detil'        => $detil,
-        ':copies'       => $copies,
         ':img'          => $img,
         ':bookType'     => $bookType,
         ':downloadLink' => $downloadLink,
-        ':readLink'     => $readLink
+        ':readLink'     => $readLink,
+        ':copies'       => $copies
     ]);
 
     return true;

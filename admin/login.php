@@ -53,6 +53,7 @@ include '../include/db_connect.php';
 include '../USERS/MemberClass.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
+    
 }
 
 $member = new Member($conn);

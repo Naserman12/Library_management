@@ -40,7 +40,6 @@ class Member{
         echo "<script>alert('البريد مستخدم مسبقاً');</script>";
         return false;
     }
-
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     $sql = "INSERT INTO member (name, email, avatar, password, phone, role)
