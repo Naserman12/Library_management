@@ -1,27 +1,14 @@
 <?php
-session_start();
-
-// إذا كان المستخدم مسجل دخول
-if (isset($_SESSION['memberId'])) {
-
-    // إذا كان مدير
-    if ($_SESSION['role'] === 'admin') {
-        header("Location: ./admin/adminpanel.php");
-        exit;
-    }
-
-    // إذا كان عضو عادي
-    if ($_SESSION['role'] === 'members') {
-        header("Location: ./BOOKS/home.php");
-        exit;
-    }
+// بناء جلسة
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
-
-// إذا لم يكن مسجل دخول → تحويله لصفحة تسجيل الدخول
-header("Location: ./admin/login.php");
-exit;
+// حدف لكل المنشن التي تم حفظها داخل الموقع
+session_unset();
+// تدمير الجلسة
+session_destroy();
+// mysqli_close($conn);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
