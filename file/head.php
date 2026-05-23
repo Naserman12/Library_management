@@ -1,7 +1,23 @@
 <?php
+ini_set('session.cookie_lifetime', 86400);
+ini_set('session.gc_maxlifetime', 86400);
+
+<?php
+
+ini_set('session.cookie_lifetime', 86400);
+ini_set('session.gc_maxlifetime', 86400);
+
+// يعمل فقط إذا HTTPS
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    ini_set('session.cookie_secure', 1);
+} else {
+    ini_set('session.cookie_secure', 0);
+}
+
+ini_set('session.cookie_httponly', 1);
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-    
 }
 // require_once $_SERVER['DOCUMENT_ROOT']. '/../BOOKS/category.php';
 require_once __DIR__ . '/../BOOKS/category.php';
