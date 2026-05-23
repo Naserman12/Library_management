@@ -80,21 +80,21 @@ session_destroy();
     <h1>اهل بك في المكتبة الالكترونية</h1>
 <div class="container">
     <!-- صفحة المدير -->
-     <a href="./admin/login.php">
+     <a href="/admin/login.php">
         <div class="card">
             <img src="./images/adminImg.png" alt="">
             <p>المدير</p>
         </div>
     </a>
     <!-- صفحة المستخدم -->
-    <a href="./admin/login.php">
+    <a href="/admin/login.php">
         <div class="card">
             <img src=".//images/userImg (1).png" alt="">
             <p>المستخدم</p>
         </div>
      </a>
      <!-- صفحة الزائر -->
-     <a href="./BOOKS/home.php">
+     <a href="/BOOKS/home.php">
          <div class="card">
              <img src="images/userImg (1).png" alt="">
              <p>الزائر</p>
