@@ -66,7 +66,7 @@ class Member{
 
         // setFlash('success', 'تم إنشاء الحساب بنجاح');
         // echo "تم إنشاء الحساب بنجاح";
-        header("REFRESH:3; URL = ../BOOKS/home.php");
+        header("Location: ../BOOKS/home.php");
         return true;
     }
 
@@ -77,9 +77,6 @@ class Member{
     // <---------دالة تسجيل دخول الاعضاء-------->
 public function login($email, $password)
 {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
 
     try {
 
@@ -102,7 +99,11 @@ public function login($email, $password)
         if (!password_verify($password, $user['password'])) {
             return false;
         }
-
+            // مهم جداً: تأكد session شغالة
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+          session_regenerate_id(true); 
         // تخزين بيانات الجلسة
         $_SESSION['memberId'] = $user['id'];
         $_SESSION['role'] = $user['role'];
@@ -150,7 +151,7 @@ public function login($email, $password)
 
     if (count($result) > 0) {
         // setFlash('error', 'تم استعارة الكتاب مسبقاً');
-        header("REFRESH:3; URL = ../BOOKS/home.php");
+        header("Location: ../BOOKS/home.php");
         return false;
     }
 
@@ -255,7 +256,7 @@ public function returnBook($bookId){
 
     // setFlash('success', 'تم إرجاع الكتاب.');
         // echo "تم إرجاع الكتاب.";
-    header("REFRESH:3; URL = ../BOOKS/home.php");
+    header("Location: ../BOOKS/home.php");
     return true;
 }
 // <//---------returnBook--------//>
@@ -290,7 +291,7 @@ public function updateBorrowStatus($bookId, $status){
 
     // setFlash('success', 'تم تحديث الحالة.');
     // echo "تم تحديث الحالة.";
-     header("REFRESH:3; URL = ../BOOKS/home.php");
+     header("Location: ../BOOKS/home.php");
 }
 // <//--==========تحديث حالة الطلب==========--//>
 // <--==========تأكيد استرجاع الكتب==========-->
@@ -353,7 +354,7 @@ public function updateProfile($name, $email, $phone, $avatar, $user_id){
 
         if ($interval->days < 1 && $lastUpdate != null) {
             setFlash('error', 'يمكنك تعديل البيانات مرة وحدة في كل 24 ساعة.');
-            header("REFRESH:1; URL=showProfile.php");
+            header("Location: showProfile.php");
             exit;
         }
 
@@ -370,8 +371,7 @@ public function updateProfile($name, $email, $phone, $avatar, $user_id){
 
         if ($stmt->rowCount() > 0) {
             setFlash('success', 'تم تحديث البيانات بنجاح!');
-            header("REFRESH:1; URL=showProfile.php");
-
+            header("Location: showProfile.php");
             exit();
         } else {
             setFlash('error', 'حدث خطأ أثناء تحديث البيانات.');

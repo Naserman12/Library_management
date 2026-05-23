@@ -1,79 +1,95 @@
 <?php
-include '../include/db_connect.php';
+
+require_once '../include/init.php';
 
 function fetchingNews($conn)
 {
     header('Content-Type: application/json; charset=utf-8');
 
-    // 1) افضل الكتب
-    $sql = "SELECT id, title, author, image, created_at 
-            FROM books 
-            WHERE is_featured = 1 
-            ORDER BY created_at DESC 
-            LIMIT 3";
+    try {
 
-    $result = $conn->query($sql);
+        // =========================================
+        // افضل الكتب
+        // =========================================
+        $featuredSql = "SELECT id, title, author, image, created_at
+                        FROM books
+                        WHERE is_featured = 1
+                        ORDER BY created_at DESC
+                        LIMIT 3";
 
-    if ($result === false) {
-        http_response_code(500);
-        echo json_encode(["error" => $conn->error]);
-        exit;
-    }
+        $featuredStmt = $conn->prepare($featuredSql);
+        $featuredStmt->execute();
 
-    $books = [];
-    while ($row = $result->fetch_assoc()) {
-        $books[] = $row;
-    }
+        $books = $featuredStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2) آخر الإضافات
-    $sql = "SELECT id, title, author, image, created_at 
-            FROM books 
-            ORDER BY created_at DESC 
-            LIMIT 5";
+        // =========================================
+        // آخر الإضافات
+        // =========================================
+        $latestSql = "SELECT id, title, author, image, created_at
+                      FROM books
+                      ORDER BY created_at DESC
+                      LIMIT 5";
 
-    $result = $conn->query($sql);
+        $latestStmt = $conn->prepare($latestSql);
+        $latestStmt->execute();
 
-    if ($result === false) {
-        http_response_code(500);
-        echo json_encode(["error" => $conn->error]);
-        exit;
-    }
+        $latestBooks = $latestStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $latestBooks = [];
-    while ($row = $result->fetch_assoc()) {
-        $latestBooks[] = $row;
-    }
-
-    // 3) بناء JSON
-    $newsData = [
-        [
-            "type" => "أفضل الكتب",
-            "content" => []
-        ],
-        [
-            "type" => "آخر الإضافات",
-            "content" => []
-        ]
-    ];
-
-    foreach ($books as $book) {
-        $newsData[0]['content'][] = [
-            "title" => $book['title'],
-            "author" => $book['author']
+        // =========================================
+        // تجهيز البيانات
+        // =========================================
+        $newsData = [
+            [
+                "type" => "أفضل الكتب",
+                "content" => []
+            ],
+            [
+                "type" => "آخر الإضافات",
+                "content" => []
+            ]
         ];
-    }
 
-    foreach ($latestBooks as $book) {
-        $newsData[1]['content'][] = [
-            "title" => $book['title'],
-            "author" => $book['author']
-        ];
-    }
+        // الكتب المميزة
+        foreach ($books as $book) {
 
-    echo json_encode([
-        "newsData" => $newsData
-    ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            $newsData[0]['content'][] = [
+                "id" => $book['id'],
+                "title" => $book['title'],
+                "author" => $book['author'],
+                "image" => $book['image'],
+                "created_at" => $book['created_at']
+            ];
+        }
+
+        // أحدث الكتب
+        foreach ($latestBooks as $book) {
+
+            $newsData[1]['content'][] = [
+                "id" => $book['id'],
+                "title" => $book['title'],
+                "author" => $book['author'],
+                "image" => $book['image'],
+                "created_at" => $book['created_at']
+            ];
+        }
+
+        // إرسال JSON
+        echo json_encode([
+            "success" => true,
+            "newsData" => $newsData
+        ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+    } catch (PDOException $e) {
+
+        http_response_code(500);
+
+        echo json_encode([
+            "success" => false,
+            "message" => $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    }
 }
 
+// تشغيل الدالة
 fetchingNews($conn);
-// $conn->close();
+?>

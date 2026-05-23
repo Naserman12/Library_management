@@ -49,12 +49,12 @@
 <body>
     <main>
 <?php
-include '../include/db_connect.php';
-include '../USERS/MemberClass.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
     
 }
+require_once '../include/db_connect.php';
+require_once '../USERS/MemberClass.php';
 
 $member = new Member($conn);
 
