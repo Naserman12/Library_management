@@ -26,78 +26,141 @@ class Member{
     }
     
     //  <--------دالة تسجيل الاعضاء-------->
-    public function register($name, $email, $avatar, $phone, $password, $role){
-        $sql = "SELECT * FROM member WHERE email = '$email'";
-        // echo $sql;
-        $result = mysqli_query($this->conn,$sql);
-        if($result->num_rows > 0){
-            // return 'البريد الاكتروني مسجل بالفعل!!.';
-            // echo 'البريد مسجل بالفعل<br>';
-            return false;
-        }
-        // تشفير كلمة المرور
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $sql = 'INSERT INTO member (name, email, avatar, password, phone, role) VALUES (?, ?, ?, ?, ?, ?)';
-    $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param('ssssss', $name, $email, $avatar, $hashedPassword, $phone, $role);
+    // public function register($name, $email, $avatar, $phone, $password, $role){
+    //     $sql = "SELECT * FROM member WHERE email = '$email'";
+    //     // echo $sql;
+    //     $result = mysqli_query($this->conn,$sql);
+    //     if($result->num_rows > 0){
+    //         // return 'البريد الاكتروني مسجل بالفعل!!.';
+    //         // echo 'البريد مسجل بالفعل<br>';
+    //         return false;
+    //     }
+    //     // تشفير كلمة المرور
+    // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // $sql = 'INSERT INTO member (name, email, avatar, password, phone, role) VALUES (?, ?, ?, ?, ?, ?)';
+    // $stmt = $this->conn->prepare($sql);
+    // $stmt->bind_param('ssssss', $name, $email, $avatar, $hashedPassword, $phone, $role);
     
-    // تعيين  قيم للمتغيرات
-    $name = $this->name;
-    $email = $this->email;
-    $phone = $this->phone;
-    $password = $this->password;
-    $role = $this->role;
+    // // تعيين  قيم للمتغيرات
+    // $name = $this->name;
+    // $email = $this->email;
+    // $phone = $this->phone;
+    // $password = $this->password;
+    // $role = $this->role;
 
 
-    if ($stmt->execute()) {
-    // 
-        header( "REFRESH:3; URL = ../admin/login.php"); 
-        return true;
-    }else{
-        // echo 'لم يتم تسجيل المستخدم';
+    // if ($stmt->execute()) {
+    // // 
+    //     header( "REFRESH:3; URL = ../admin/login.php"); 
+    //     return true;
+    // }else{
+    //     // echo 'لم يتم تسجيل المستخدم';
+    //     return false;
+    // }
+
+        
+    // }
+    public function register($name, $email, $avatar, $phone, $password, $role)
+{
+    // 1. التحقق من وجود الإيميل
+    $check = $this->conn->prepare("SELECT id FROM member WHERE email = :email");
+    $check->execute(['email' => $email]);
+
+    if ($check->rowCount() > 0) {
         return false;
     }
 
-        
+    // 2. تشفير كلمة المرور
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // 3. إدخال البيانات
+    $sql = "INSERT INTO member (name, email, avatar, password, phone, role)
+            VALUES (:name, :email, :avatar, :password, :phone, :role)";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $result = $stmt->execute([
+        'name' => $name,
+        'email' => $email,
+        'avatar' => $avatar,
+        'password' => $hashedPassword,
+        'phone' => $phone,
+        'role' => $role
+    ]);
+
+    if ($result) {
+        header("Location: ../admin/login.php");
+        exit;
     }
+
+    return false;
+}
     //  <//--------دالة تسجيل الاعضاء--------//>
     // <---------دالة تسجيل دخول الاعضاء-------->
-    public function login($email, $password){
-        session_start();
-        // $sql = mysqli_query($this->conn, "SELECT *  FROM member WHERE email= '$email' AND password = '$password'");
-          $sql = "SELECT * FROM member WHERE email = '$email'";  
-          $result = $this->conn->query( $sql );
-        if($sql){
-            // print_r($sql) ;
-            // echo '<br>===============<br>';
-        }
-        if($result->num_rows > 0){
+    // public function login($email, $password){
+    //     session_start();
+    //     // $sql = mysqli_query($this->conn, "SELECT *  FROM member WHERE email= '$email' AND password = '$password'");
+    //       $sql = "SELECT * FROM member WHERE email = '$email'";  
+    //       $result = $this->conn->query( $sql );
+    //     if($sql){
+    //         // print_r($sql) ;
+    //         // echo '<br>===============<br>';
+    //     }
+    //     if($result->num_rows > 0){
            
-            $row =  $result->fetch_assoc();
-            // التحقق من كلمة المرور
-            if (password_verify($password, $row['password'])) {
-                // تخزين بيانات المستخدم في الجلسة 
-            $_SESSION['memberId'] = $row['id'];
-            $_SESSION['role'] = $row['role'];
-            // تعريف المعرف عشان يظهر في صفحة استعارة الكتب
-            $this->id = $_SESSION['memberId'];
-            $this->role = $_SESSION['role'];
-            // echo $_SESSION['memberId']. ' هذا المعرف من صفحة الاعضاء <br>';
-            // echo $this->role. ' هذا الدور من صفحة الاعضاء<br>';
-            $_SESSION['user_name'] = $row['name'];
-            // echo 'تم تسجيل الدخول';
-            return true;
-            } else{
-                // echo 'كلمة السر غير صحيحة';
-                header( "REFRESH:2; URL = ../admin/login.php");
-                return false;
-            }
-        }else{
-            // echo "<br>لم يتم العثور على المستخدم";
-            return false;
-            }
+    //         $row =  $result->fetch_assoc();
+    //         // التحقق من كلمة المرور
+    //         if (password_verify($password, $row['password'])) {
+    //             // تخزين بيانات المستخدم في الجلسة 
+    //         $_SESSION['memberId'] = $row['id'];
+    //         $_SESSION['role'] = $row['role'];
+    //         // تعريف المعرف عشان يظهر في صفحة استعارة الكتب
+    //         $this->id = $_SESSION['memberId'];
+    //         $this->role = $_SESSION['role'];
+    //         // echo $_SESSION['memberId']. ' هذا المعرف من صفحة الاعضاء <br>';
+    //         // echo $this->role. ' هذا الدور من صفحة الاعضاء<br>';
+    //         $_SESSION['user_name'] = $row['name'];
+    //         // echo 'تم تسجيل الدخول';
+    //         return true;
+    //         } else{
+    //             // echo 'كلمة السر غير صحيحة';
+    //             header( "REFRESH:2; URL = ../admin/login.php");
+    //             return false;
+    //         }
+    //     }else{
+    //         // echo "<br>لم يتم العثور على المستخدم";
+    //         return false;
+    //         }
         
+    // }
+    public function login($email, $password)
+{
+    session_start();
+
+    $sql = "SELECT * FROM member WHERE email = :email LIMIT 1";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['email' => $email]);
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        return false;
     }
+
+    // التحقق من كلمة المرور
+    if (password_verify($password, $user['password'])) {
+
+        $_SESSION['memberId'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
+        $_SESSION['user_name'] = $user['name'];
+
+        return true;
+
+    } else {
+        header("Location: ../admin/login.php");
+        return false;
+    }
+}
         //  else{
             // return false; // لم يتم العثور على مستخدم بنفس البريد الالكتروني
         // }
@@ -121,182 +184,350 @@ class Member{
     }
     // <//---------دالة تسخيل الخروج--------//>
     // <---------دالة استعارة الكتب-------->
-    public function borrowedBook($book_id, $memberId, $title){
-            // التحقق من حالة الكتاب المستعار مسبقاً
-            $sql = "SELECT * FROM borrow_records WHERE book_id = ? AND return_status != 'Confirmed'";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param('i', $book_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
+    // public function borrowedBook($book_id, $memberId, $title){
+    //         // التحقق من حالة الكتاب المستعار مسبقاً
+    //         $sql = "SELECT * FROM borrow_records WHERE book_id = ? AND return_status != 'Confirmed'";
+    //         $stmt = $this->conn->prepare($sql);
+    //         $stmt->bind_param('i', $book_id);
+    //         $stmt->execute();
+    //         $result = $stmt->get_result();
             
-            if ($result->num_rows > 0) {
-                echo 'تم استعارة الكتاب مسبقاً';
-                header( "REFRESH:3; URL = ../BOOKS/home.php");
-                return false;
-            }
+    //         if ($result->num_rows > 0) {
+    //             echo 'تم استعارة الكتاب مسبقاً';
+    //             header( "REFRESH:3; URL = ../BOOKS/home.php");
+    //             return false;
+    //         }
             
-        $maxBookAllowed = 3;
-        // التاكد من ان العضو لم يستعر اكثر من الحد المسموح به
-        $sql = 'SELECT COUNT(*) as totalBorrowed FROM borrow_records where member_id= ?';
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $memberId);
-        $stmt->execute();
+    //     $maxBookAllowed = 3;
+    //     // التاكد من ان العضو لم يستعر اكثر من الحد المسموح به
+    //     $sql = 'SELECT COUNT(*) as totalBorrowed FROM borrow_records where member_id= ?';
+    //     $stmt = $this->conn->prepare($sql);
+    //     $stmt->bind_param('i', $memberId);
+    //     $stmt->execute();
         
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
+    //     $result = $stmt->get_result();
+    //     $row = $result->fetch_assoc();
 
-        if ($row['totalBorrowed'] >= $maxBookAllowed) {
-            echo 'لقد تجاوزت الحد المسموح به';
-            return false;
-        }
-        // اضافة  استعارة الكتاب الى سجل المستخدم
-        $borrowDate = date('Y-m-d H:i:s');
-        // الموعد النهائي لارجاع الكتاب
-        $returnDate = null; 
-        // $returnDate = date('Y-m-d', strtotime('+1 minutes'));
+    //     if ($row['totalBorrowed'] >= $maxBookAllowed) {
+    //         echo 'لقد تجاوزت الحد المسموح به';
+    //         return false;
+    //     }
+    //     // اضافة  استعارة الكتاب الى سجل المستخدم
+    //     $borrowDate = date('Y-m-d H:i:s');
+    //     // الموعد النهائي لارجاع الكتاب
+    //     $returnDate = null; 
+    //     // $returnDate = date('Y-m-d', strtotime('+1 minutes'));
          
-            $sql = 'INSERT INTO borrow_records (member_id, book_id, title, borrow_date, return_date) VALUES (?, ?,?, ?, ?)';
-            $stmt = $this->conn->prepare($sql);
-            echo '<pre>';
-            var_dump($stmt);
-            echo '</pre>';
-            $stmt->bind_param('iisss',  $book_id, $memberId, $title, $borrowDate, $returnDate);
-            echo '<pre>';
-            print_r($stmt);
-            echo '</pre>';
-            if($stmt->execute()){
-                $updateSql = "UPDATE books SET copies = copies -1 WHERE id = ?";
-                $updateStmt = $this->conn->prepare($updateSql);
-                    $updateStmt->bind_param("i", $book_id);
-                    $updateStmt->execute();
-                    return 'تم استعارة الكتاب';
-                }else{
-            echo 'لم يتم العثور على  معرف الكتاب......';
-                }
+    //         $sql = 'INSERT INTO borrow_records (member_id, book_id, title, borrow_date, return_date) VALUES (?, ?,?, ?, ?)';
+    //         $stmt = $this->conn->prepare($sql);
+    //         echo '<pre>';
+    //         var_dump($stmt);
+    //         echo '</pre>';
+    //         $stmt->bind_param('iisss',  $book_id, $memberId, $title, $borrowDate, $returnDate);
+    //         echo '<pre>';
+    //         print_r($stmt);
+    //         echo '</pre>';
+    //         if($stmt->execute()){
+    //             $updateSql = "UPDATE books SET copies = copies -1 WHERE id = ?";
+    //             $updateStmt = $this->conn->prepare($updateSql);
+    //                 $updateStmt->bind_param("i", $book_id);
+    //                 $updateStmt->execute();
+    //                 return 'تم استعارة الكتاب';
+    //             }else{
+    //         echo 'لم يتم العثور على  معرف الكتاب......';
+    //             }
         
         
-    }
-    // <//---------دالة استعارة الكتب--------//>
-    // <---------returnBook-------->
-    public function returnBook($bookId){
-        echo 'Memberb Id'. $this->id;
-        echo '<br>Book Id' .$bookId;
-        // التحقق هل الضعو استعار الكتاب ام لا
-        $sql = "SELECT * FROM borrow_records WHERE member_id = ? AND book_id = ?  AND return_date  IS NULL";
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt === false) {
-            echo "فشل تحضير الاستعلام". $this->conn->error;
-           
-            return false;
-        }
-        $stmt->bind_param('ii', $this->id, $bookId);
-        // echo '<br>Memberb Id '. $this->id;
-        // echo '<br><br>Book Id ' .$bookId;
-        if(!$stmt->execute()){
-            echo 'فشل تفيذ الستعلام'. $stmt->error;
-            return false;
-        }
-        // $stmt->execute();
-        $result = $stmt->get_result();
-        if (!$result) {
-            echo 'فشل الحصول على التائج'. $this->conn->error;
-            return false;
-        }
-        // $row = $result->fetch_assoc();
-        if ($result->num_rows === 0) {
-            // اذا لم يتم العثور على سجل استعارة للكتب
-            echo 'لم تقم باستعارة هذا الكتاب';
-            return false;
-        }
+    // }
+    public function borrowedBook($book_id, $memberId, $title){
 
-    $returnDate = date('Y-m-d');
-    $sql = "UPDATE borrow_records SET  return_date =? WHERE member_id =? AND book_id =?";
+    // التحقق من حالة الكتاب
+    $sql = "SELECT * FROM borrow_records 
+            WHERE book_id = :book_id 
+            AND return_status != 'Confirmed'";
+
     $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("sii",$returnDate, $this->id, $bookId);
-    if ($stmt->execute()) {
-        //    حذف السجل من الجدول
-            $sql = 'DELETE FROM borrow_records WHERE member_id =? AND book_id =? ';
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param('ii', $this->id, $bookId);
-    
-            $updateSql = "UPDATE books SET copies = copies +1 WHERE id = ?";
-            $updateStmt = $this->conn->prepare($updateSql); 
-            $updateStmt->bind_param("i", $bookId);
-            $updateStmt->execute();
-            echo "<br>تم إرجاع الكتاب.<br>";
-            return true;
-     
-    }else{
-        echo 'حدث خطأ  لم يتم إرجاع الكتاب';
+    $stmt->execute([
+        ':book_id' => $book_id
+    ]);
+
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($result) > 0) {
+        echo 'تم استعارة الكتاب مسبقاً';
+        header("REFRESH:3; URL = ../BOOKS/home.php");
         return false;
     }
+
+    // الحد المسموح
+    $maxBookAllowed = 3;
+
+    $sql = "SELECT COUNT(*) as totalBorrowed 
+            FROM borrow_records 
+            WHERE member_id = :member_id";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+        ':member_id' => $memberId
+    ]);
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row['totalBorrowed'] >= $maxBookAllowed) {
+        echo 'لقد تجاوزت الحد المسموح به';
+        return false;
+    }
+
+    // إضافة الاستعارة
+    $borrowDate = date('Y-m-d H:i:s');
+    $returnDate = null;
+
+    $sql = "INSERT INTO borrow_records 
+            (member_id, book_id, title, borrow_date, return_date)
+            VALUES (:member_id, :book_id, :title, :borrow_date, :return_date)";
+
+    $stmt = $this->conn->prepare($sql);
+
+    if ($stmt->execute([
+        ':member_id' => $memberId,
+        ':book_id' => $book_id,
+        ':title' => $title,
+        ':borrow_date' => $borrowDate,
+        ':return_date' => $returnDate
+    ])) {
+
+        $updateSql = "UPDATE books 
+                      SET copies = copies - 1 
+                      WHERE id = :id";
+
+        $updateStmt = $this->conn->prepare($updateSql);
+        $updateStmt->execute([
+            ':id' => $book_id
+        ]);
+
+        return 'تم استعارة الكتاب';
+    }
+
+    return false;
+}
+    // <//---------دالة استعارة الكتب--------//>
+    // <---------returnBook-------->
+//     public function returnBook($bookId){
+//         echo 'Memberb Id'. $this->id;
+//         echo '<br>Book Id' .$bookId;
+//         // التحقق هل الضعو استعار الكتاب ام لا
+//         $sql = "SELECT * FROM borrow_records WHERE member_id = ? AND book_id = ?  AND return_date  IS NULL";
+//         $stmt = $this->conn->prepare($sql);
+//         if ($stmt === false) {
+//             echo "فشل تحضير الاستعلام". $this->conn->error;
+           
+//             return false;
+//         }
+//         $stmt->bind_param('ii', $this->id, $bookId);
+//         // echo '<br>Memberb Id '. $this->id;
+//         // echo '<br><br>Book Id ' .$bookId;
+//         if(!$stmt->execute()){
+//             echo 'فشل تفيذ الستعلام'. $stmt->error;
+//             return false;
+//         }
+//         // $stmt->execute();
+//         $result = $stmt->get_result();
+//         if (!$result) {
+//             echo 'فشل الحصول على التائج'. $this->conn->error;
+//             return false;
+//         }
+//         // $row = $result->fetch_assoc();
+//         if ($result->num_rows === 0) {
+//             // اذا لم يتم العثور على سجل استعارة للكتب
+//             echo 'لم تقم باستعارة هذا الكتاب';
+//             return false;
+//         }
+
+//     $returnDate = date('Y-m-d');
+//     $sql = "UPDATE borrow_records SET  return_date =? WHERE member_id =? AND book_id =?";
+//     $stmt = $this->conn->prepare($sql);
+//     $stmt->bind_param("sii",$returnDate, $this->id, $bookId);
+//     if ($stmt->execute()) {
+//         //    حذف السجل من الجدول
+//             $sql = 'DELETE FROM borrow_records WHERE member_id =? AND book_id =? ';
+//             $stmt = $this->conn->prepare($sql);
+//             $stmt->bind_param('ii', $this->id, $bookId);
+    
+//             $updateSql = "UPDATE books SET copies = copies +1 WHERE id = ?";
+//             $updateStmt = $this->conn->prepare($updateSql); 
+//             $updateStmt->bind_param("i", $bookId);
+//             $updateStmt->execute();
+//             echo "<br>تم إرجاع الكتاب.<br>";
+//             return true;
+     
+//     }else{
+//         echo 'حدث خطأ  لم يتم إرجاع الكتاب';
+//         return false;
+//     }
+// }
+public function returnBook($bookId){
+
+    $sql = "SELECT * FROM borrow_records 
+            WHERE member_id = :member_id 
+            AND book_id = :book_id 
+            AND return_date IS NULL";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $stmt->execute([
+        ':member_id' => $this->id,
+        ':book_id' => $bookId
+    ]);
+
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($result) === 0) {
+        echo 'لم تقم باستعارة هذا الكتاب';
+        return false;
+    }
+
+    $returnDate = date('Y-m-d');
+
+    $sql = "UPDATE borrow_records 
+            SET return_date = :return_date 
+            WHERE member_id = :member_id 
+            AND book_id = :book_id";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $stmt->execute([
+        ':return_date' => $returnDate,
+        ':member_id' => $this->id,
+        ':book_id' => $bookId
+    ]);
+
+    // إعادة زيادة النسخ
+    $updateSql = "UPDATE books 
+                  SET copies = copies + 1 
+                  WHERE id = :id";
+
+    $updateStmt = $this->conn->prepare($updateSql);
+    $updateStmt->execute([
+        ':id' => $bookId
+    ]);
+
+    echo "تم إرجاع الكتاب.";
+    return true;
 }
 // <//---------returnBook--------//>
 
 // <--==========تحديث حالة الطلب==========-->
-public function updateBorrowStatus( $bookId,  $status){
-    echo $status .'<br>'.$bookId.'<br>';
+// public function updateBorrowStatus( $bookId,  $status){
+//     echo $status .'<br>'.$bookId.'<br>';
     
-    // عرض الحالة الحالية قبل التحديث
-    //     // عرض الحالة الحالية قبل التحديث
-    $sqlCheck = "SELECT borrow_status FROM borrow_records WHERE id = ?";
-    $stmtCheck = $this->conn->prepare($sqlCheck);
-    $stmtCheck->bind_param('i', $bookId);
-    $stmtCheck->execute();
-    $resultCheck = $stmtCheck->get_result();
-    // التحقق إذا كانت النتيجة غير فارغة
-    if ($resultCheck && $resultCheck->num_rows > 0) {
-        $currentStatus = $resultCheck->fetch_assoc()['borrow_status'];
-        echo "الحالة الحالية: " . $currentStatus . "<br>";
-    } else {
-        echo "لم يتم العثور على السجل مع معرف الكتاب: <br>" . $bookId . "<br>";
-        return;  // إيقاف الدالة إذا لم يتم العثور على السجل
-    }
-    // <--//عرض الحالة الحالية قبل التحديث///-->
-    echo $status .'<br>'.$bookId.'<br>';
-    $sql = "UPDATE borrow_records SET borrow_status =? WHERE id =?";
-    echo $status .'<br>'.$sql.'<br>';
-    $stmt = $this->conn->prepare($sql);
+//     // عرض الحالة الحالية قبل التحديث
+//     //     // عرض الحالة الحالية قبل التحديث
+//     $sqlCheck = "SELECT borrow_status FROM borrow_records WHERE id = ?";
+//     $stmtCheck = $this->conn->prepare($sqlCheck);
+//     $stmtCheck->bind_param('i', $bookId);
+//     $stmtCheck->execute();
+//     $resultCheck = $stmtCheck->get_result();
+//     // التحقق إذا كانت النتيجة غير فارغة
+//     if ($resultCheck && $resultCheck->num_rows > 0) {
+//         $currentStatus = $resultCheck->fetch_assoc()['borrow_status'];
+//         echo "الحالة الحالية: " . $currentStatus . "<br>";
+//     } else {
+//         echo "لم يتم العثور على السجل مع معرف الكتاب: <br>" . $bookId . "<br>";
+//         return;  // إيقاف الدالة إذا لم يتم العثور على السجل
+//     }
+//     // <--//عرض الحالة الحالية قبل التحديث///-->
+//     echo $status .'<br>'.$bookId.'<br>';
+//     $sql = "UPDATE borrow_records SET borrow_status =? WHERE id =?";
+//     echo $status .'<br>'.$sql.'<br>';
+//     $stmt = $this->conn->prepare($sql);
 
-    if($stmt === false){
-        die("فشل إعداد الاستعلام: " . $this->conn->error);
-    }
-    $stmt->bind_param('si', $status, $bookId);
-    $stmt->execute();
-    if($stmt->affected_rows > 0){
-        echo "تم تحديث الحالة.";
-    }else{
-            echo 'لم يتم تحديث الحالة.';
-    }
+//     if($stmt === false){
+//         die("فشل إعداد الاستعلام: " . $this->conn->error);
+//     }
+//     $stmt->bind_param('si', $status, $bookId);
+//     $stmt->execute();
+//     if($stmt->affected_rows > 0){
+//         echo "تم تحديث الحالة.";
+//     }else{
+//             echo 'لم يتم تحديث الحالة.';
+//     }
       
 
-    // $stmt->bind_param('i', $status);
-}
+//     // $stmt->bind_param('i', $status);
+// }
+public function updateBorrowStatus($bookId, $status){
 
+    $sql = "SELECT borrow_status FROM borrow_records WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':id' => $bookId]);
+
+    $current = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$current) {
+        echo "السجل غير موجود";
+        return;
+    }
+
+    echo "الحالة الحالية: " . $current['borrow_status'];
+
+    $sql = "UPDATE borrow_records 
+            SET borrow_status = :status 
+            WHERE id = :id";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $stmt->execute([
+        ':status' => $status,
+        ':id' => $bookId
+    ]);
+
+    echo "تم تحديث الحالة.";
+}
 // <//--==========تحديث حالة الطلب==========--//>
 // <--==========تأكيد استرجاع الكتب==========-->
 public function confirmReturn($bookId){
-        $sql = "UPDATE borrow_records SET return_status ='Confirmed', return_date = ?  WHERE id = ?";
-        $stmt = $this->conn->prepare($sql);
-            // الحصول على التاريخ الحالي
-    $returnDate = date('Y-m-d H:i:s'); // صيغة التاريخ
-        // ربط المعاملات
-        $stmt->bind_param('si', $returnDate, $bookId);
-        // تنفيذ الاستعلام
-        if ($stmt->execute()) {
-            // التحقق من عدد الصفوف التي تم تحديثها
-            if ($stmt->affected_rows > 0) {
-                echo "تم تأكيد استرجاع الكتاب بنجاح.";
-                return true;
-            } else {
-                echo "لم يتم تحديث السجل، قد لا يكون موجودًا.";
-                return false;
-            }
-        } else {
-            echo "خطأ أثناء تنفيذ الاستعلام: " . $stmt->error;
-            return false;
-        }
+
+    $sql = "UPDATE borrow_records 
+            SET return_status = 'Confirmed',
+                return_date = :date
+            WHERE id = :id";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $result = $stmt->execute([
+        ':date' => date('Y-m-d H:i:s'),
+        ':id' => $bookId
+    ]);
+
+    if ($result) {
+        echo "تم تأكيد الاسترجاع بنجاح";
+        return true;
     }
+
+    return false;
+}
+// public function confirmReturn($bookId){
+//         $sql = "UPDATE borrow_records SET return_status ='Confirmed', return_date = ?  WHERE id = ?";
+//         $stmt = $this->conn->prepare($sql);
+//             // الحصول على التاريخ الحالي
+//     $returnDate = date('Y-m-d H:i:s'); // صيغة التاريخ
+//         // ربط المعاملات
+//         $stmt->bind_param('si', $returnDate, $bookId);
+//         // تنفيذ الاستعلام
+//         if ($stmt->execute()) {
+//             // التحقق من عدد الصفوف التي تم تحديثها
+//             if ($stmt->affected_rows > 0) {
+//                 echo "تم تأكيد استرجاع الكتاب بنجاح.";
+//                 return true;
+//             } else {
+//                 echo "لم يتم تحديث السجل، قد لا يكون موجودًا.";
+//                 return false;
+//             }
+//         } else {
+//             echo "خطأ أثناء تنفيذ الاستعلام: " . $stmt->error;
+//             return false;
+//         }
+//     }
 // <//--==========تأكيد استرجاع الكتب==========--//>
 //  <--=========عرض بيانات المستخدم=========-->
 public function getProfile($memberId){

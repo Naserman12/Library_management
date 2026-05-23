@@ -26,55 +26,115 @@
             $this->conn = $db;
     }
     //   <-------- اضافة البحث-------->
-        public function searchBooks($books){
-            $sql = "SELECT * FROM books WHERE bookType = 'paper' AND title LIKE? OR author LIKE?";
-            $stmt = $this->conn->prepare($sql);
+        // public function searchBooks($books){
+        //     $sql = "SELECT * FROM books WHERE bookType = 'paper' AND title LIKE? OR author LIKE?";
+        //     $stmt = $this->conn->prepare($sql);
 
-            if ($stmt === false) {
-                throw new Exception('Error preparing query: '. $this->conn->error);
-            }
-            $books = '%' . $books. '%';
-            $stmt->bind_param('ss',  $books, $books);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            return $result->fetch_all(MYSQLI_ASSOC);
-        }
+        //     if ($stmt === false) {
+        //         throw new Exception('Error preparing query: '. $this->conn->error);
+        //     }
+        //     $books = '%' . $books. '%';
+        //     $stmt->bind_param('ss',  $books, $books);
+        //     $stmt->execute();
+        //     $result = $stmt->get_result();
+        //     return $result->fetch_all(MYSQLI_ASSOC);
+        // }
+public function searchBooks($searchTerm) {
+    $stmt = $this->conn->prepare("
+        SELECT * FROM books 
+        WHERE title LIKE :search 
+        OR author LIKE :search
+    ");
+
+    $stmt->bindValue(':search', "%$searchTerm%", PDO::PARAM_STR);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
         //   <//-------- اضافة البحث--------//>
 // <-------- اضافة كتب-------->
+// public function addBook($title, $author, $year, $categoryName, $detil, $copies, $img, $bookType){
+//     // var_dump($category_id);
+//     $sql = "INSERT INTO books (title, author, year, category, detil,  copies, image, bookType) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+//      $stmt = $this->conn->prepare($sql);
+//     $stmt->bind_param('sssssiss', $title, $author, $year, $categoryName, $detil, $copies, $img, $bookType);
+    
+//     $stmt->execute();
+    
+//     return true;
+// }
 public function addBook($title, $author, $year, $categoryName, $detil, $copies, $img, $bookType){
-    // var_dump($category_id);
-    $sql = "INSERT INTO books (title, author, year, category, detil,  copies, image, bookType) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-     $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param('sssssiss', $title, $author, $year, $categoryName, $detil, $copies, $img, $bookType);
-    
-    $stmt->execute();
-    
+
+    $sql = "INSERT INTO books 
+    (title, author, year, category, detil, copies, image, bookType)
+    VALUES (:title, :author, :year, :category, :detil, :copies, :img, :bookType)";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $stmt->execute([
+        ':title' => $title,
+        ':author' => $author,
+        ':year' => $year,
+        ':category' => $categoryName,
+        ':detil' => $detil,
+        ':copies' => $copies,
+        ':img' => $img,
+        ':bookType' => $bookType
+    ]);
+
     return true;
 }
     //   <--//-------- اضافة كتب--------//-->
     //   <-------- تعديل الكتب--------->
-      public function updateBook( $title, $author, $category, $year, $detil, $copies,  $img, $id){
-         $query ="UPDATE books SET title=?, author=?, category=?, year=?, detil=?, copies=?, image=? where id=?";  ##"UPDATE  books SET title='$title', author=' $author', category='$category', year='$year', copies=$copies, image='$img'";## 
-        echo $query;
-        $stmt = $this->conn->prepare($query);
-        if ($stmt->affected_rows === null) {
-            // echo '$stmt Doing..';
-            throw new Exception('Error preparing query: '. $this->conn->error);
-        }
-        // var_dump($stmt ) ;
-        $stmt->bind_param("sssssisi", $title, $author, $category, $year,$detil, $copies, $img, $id) ;
-        $stmt->execute();
-        if (!$stmt->execute()) {
-            throw new Exception("'errror'". $this->conn->error);
-        }
+    //   public function updateBook( $title, $author, $category, $year, $detil, $copies,  $img, $id){
+    //      $query ="UPDATE books SET title=?, author=?, category=?, year=?, detil=?, copies=?, image=? where id=?";  ##"UPDATE  books SET title='$title', author=' $author', category='$category', year='$year', copies=$copies, image='$img'";## 
+    //     echo $query;
+    //     $stmt = $this->conn->prepare($query);
+    //     if ($stmt->affected_rows === null) {
+    //         // echo '$stmt Doing..';
+    //         throw new Exception('Error preparing query: '. $this->conn->error);
+    //     }
+    //     // var_dump($stmt ) ;
+    //     $stmt->bind_param("sssssisi", $title, $author, $category, $year,$detil, $copies, $img, $id) ;
+    //     $stmt->execute();
+    //     if (!$stmt->execute()) {
+    //         throw new Exception("'errror'". $this->conn->error);
+    //     }
 
-        $stmt->execute();
-        return true;
-        // if ($stmt->affected_rows === null) {
-        //     // echo '$stmt Doing..';
-        //     throw new Exception('Error preparing query: '. $stmt->error);
-        // }
-        }
+    //     $stmt->execute();
+    //     return true;
+    //     // if ($stmt->affected_rows === null) {
+    //     //     // echo '$stmt Doing..';
+    //     //     throw new Exception('Error preparing query: '. $stmt->error);
+    //     // }
+    //     }
+    public function updateBook($title, $author, $category, $year, $detil, $copies, $img, $id){
+
+    $sql = "UPDATE books SET 
+        title = :title,
+        author = :author,
+        category = :category,
+        year = :year,
+        detil = :detil,
+        copies = :copies,
+        image = :image
+        WHERE id = :id";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $stmt->execute([
+        ':title' => $title,
+        ':author' => $author,
+        ':category' => $category,
+        ':year' => $year,
+        ':detil' => $detil,
+        ':copies' => $copies,
+        ':image' => $img,
+        ':id' => $id
+    ]);
+
+    return true;
+}
       //   <--//------ تعديل الكتب-------//-->
       //   <--------حذف--------->
       public function deleteBook($id){
@@ -92,25 +152,35 @@ public function addBook($title, $author, $year, $categoryName, $detil, $copies, 
       }
     //   <--//------حذف-------//-->
     //   <--------عرض الكتب --------->
-        public function getBooks(){
-            $query = "SELECT * FROM books";
-            $result = mysqli_query($this->conn, $query);
-            return $result;
+        // public function getBooks(){
+        //     $query = "SELECT * FROM books";
+        //     $result = mysqli_query($this->conn, $query);
+        //     return $result;
+        // }
+        public function getBooks() {
+            $stmt = $this->conn->prepare("SELECT * FROM books");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     //   <--//------عرض الكتب -------//-->
 
     // <------جلب معرف الكتب------->
+// public function getBook($id) {
+//   // تحضير الاستعلام لجلب الكتاب بناءً على المعرف
+//   $query = "SELECT * FROM books WHERE id = ?";
+//   $stmt = $this->conn->prepare($query);
+// // ربط المتغيرات
+// $stmt->bind_param("i", $id);
+// // تنفيذ الاستعلام
+// $stmt->execute();
+// $result = $stmt->get_result();
+// return $result->fetch_assoc();
+// // التحقق من وجود البيانات
+// }
 public function getBook($id) {
-  // تحضير الاستعلام لجلب الكتاب بناءً على المعرف
-  $query = "SELECT * FROM books WHERE id = ?";
-  $stmt = $this->conn->prepare($query);
-// ربط المتغيرات
-$stmt->bind_param("i", $id);
-// تنفيذ الاستعلام
-$stmt->execute();
-$result = $stmt->get_result();
-return $result->fetch_assoc();
-// التحقق من وجود البيانات
+    $stmt = $this->conn->prepare("SELECT * FROM books WHERE id = :id");
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 // <//------جلب معرف الكتب-------//>
 // <---------جلب جميع الكتب-------->
