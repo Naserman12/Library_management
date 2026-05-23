@@ -191,11 +191,8 @@ public function getBook($id) {
         ". $this->conn. "LEFT JOIN categories ON books.category_id = category.id";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
-        $result = $stmt->get_result();
-        if (!$result) {
-            echo "لم يتم جلب جميع الكتب";
-      }
-      return $result->fetch_all(MYSQLI_ASSOC);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
       // <//---------جلب جميع الكتب--------//>
     }
     // <//----------كلاس الكتب---------//>
@@ -215,10 +212,11 @@ Class DigitalBook extends Book{
                 throw new Exception('Error preparing query: '. $this->conn->error);
             }
             $books = '%' . $books. '%';
-            $stmt->bind_param('ss',  $books, $books);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            return $result->fetch_all(MYSQLI_ASSOC);
+            $stmt->execute([
+                ':search' => $books
+            ]);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
 
         }
     //   <//-------- اضافة البحث--------//>
@@ -283,12 +281,10 @@ public function addDigiBook($title, $author, $year, $categoryName, $detil, $copi
 
     public function getDigiBooks(){
         $sql = "SELECT * FROM books WHERE bookType ='Digi'";
-        $result = mysqli_query($this->conn, $sql);
-        if ($result) {
-            return $result;
-        }else{
-            return false;
-        }
+        $result = $this->conn->prepare($sql);
+        $result->execute();
+
+            return $result->fetchAll(PDO::FETCH_ASSOC);
     }
     }
 

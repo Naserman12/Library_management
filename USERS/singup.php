@@ -1,5 +1,6 @@
 <?php
 include 'MemberClass.php';
+include "../include/flash.php";
 $member = new Member($conn);
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -18,12 +19,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $member->password,
     'members'
 );
-    if($select){
-        header("Location: ../BooKS/home.php");
-        exit;
-    } else {
-        echo "فشل في التسجيل";
-    }
+   if($select){
+    setFlash('success', 'تم التسجيل بنجاح');
+    header("Location: ../BOOKS/home.php");
+    exit;
+} else {
+    setFlash('error', 'فشل في التسجيل');
+    header("Location: register.php");
+    exit;
+}
 }else{
     echo 'لم يتم استلام البيانات';
 }
@@ -72,6 +76,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
     </style>
 <h1>تسجيل مستخدم جديد</h1>
+<?php
+$flash = getFlash();
+if ($flash):
+?>
+    <div class="alert <?= $flash['type']; ?>">
+        <?= $flash['message']; ?>
+    </div>
+<?php endif; ?>
 <form action="" method="POST" enctype="multipart/form-data">
     <div class=".container">
     <input class="Inpt" required placeholder="الاسم" type="text" name="name" > <br>
