@@ -1,6 +1,6 @@
 <?php
 include 'MemberClass.php';
-include "../include/flash.php";
+// include "../include/flash.php";
 $member = new Member($conn);
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -11,20 +11,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $member->email = $_POST['email'];
     $member->password = $_POST['password'];
     $member->avatar = $_POST['avatar'] ?? 'man.png';
+    $member->role = 'members';
     $select = $member->register(
     $member->name,
     $member->email,
     $member->avatar,
     $member->phone,
     $member->password,
-    'members'
+    $member->role
 );
    if($select){
-    setFlash('success', 'تم التسجيل بنجاح');
-    header("Location: ../BOOKS/home.php");
+    // setFlash('success', 'تم التسجيل بنجاح');
+    header("Location: ../BOOKS/books.php");
     exit;
 } else {
-    setFlash('error', 'فشل في التسجيل');
+    // setFlash('error', 'فشل في التسجيل');
+    echo "<script>alert('فشل في التسجيل');</script>";
     header("Location: register.php");
     exit;
 }
@@ -76,14 +78,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
     </style>
 <h1>تسجيل مستخدم جديد</h1>
-<?php
-$flash = getFlash();
-if ($flash):
-?>
-    <div class="alert <?= $flash['type']; ?>">
-        <?= $flash['message']; ?>
-    </div>
-<?php endif; ?>
 <form action="" method="POST" enctype="multipart/form-data">
     <div class=".container">
     <input class="Inpt" required placeholder="الاسم" type="text" name="name" > <br>
