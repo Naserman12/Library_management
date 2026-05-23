@@ -49,44 +49,37 @@
 <body>
     <main>
 <?php
+include '../include/db_connect.php';
 include '../USERS/MemberClass.php';
-// session_start();
-$member = new Member($conn);
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    if (empty($_POST['email']) || empty($_POST['password'])) {
-       echo " تأكد من ادخال بيانات صحيحة";
-       return 0;
-       }
-         $member->email = htmlspecialchars($_POST['email']);
-         $member->password =htmlspecialchars($_POST['password']);
-         if (isset($_POST['keep'])) {
-            $keep = htmlspecialchars($_POST['keep']);
-            if ($keep==1) {
-              setcookie('email',$member->email, time()+3600, "/");
-              setcookie('password',$member->password, time()+3600, "/");
-            }
-         }
-         $select = $member->login($member->email, $member->password);
-         if($select == true){
-             if ($_SESSION['role'] == 'admin') {
-                 echo "'<script>alert ('الرجاء الانتظار سيتم نتقلك الى صفحة التحكم')</script>'";
-                 header( "REFRESH:3; URL = adminpanel.php");
-                 return 0;
-                }elseif ($_SESSION["role"] == "members") {
-            echo "'<script>alert ('الرجاء الانتظار سيتم نتقلك الى المكتبة')</script>'";
-            header( "REFRESH:3; URL = ../BOOKS/home.php");
-            return 0;
-            }
+session_start();
 
-        ?>
-        <a href="../borrow/Borrow.php?id=<?php echo $_SESSION['memberId']; ?>">استعارة كتاب</a><br>
-        <a href="../borrow/returnBook.php?id=<?php echo $_SESSION['memberId']; ?>">استرجاع الكتاب</a><br>
-        <a href="../process_request.php?id=<?php echo $_SESSION['memberId']; ?>">طلب كتاب</a><br>
-        <a href="logout.php">تسجيل الخروج</a>
-        <?php
+$member = new Member($conn);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    if (empty($_POST['email']) || empty($_POST['password'])) {
+        echo "تأكد من إدخال بيانات صحيحة";
+        return;
+    }
+
+    $email = htmlspecialchars($_POST['email']);
+    $password = htmlspecialchars($_POST['password']);
+
+    $login = $member->login($email, $password);
+
+    if ($login) {
+        if ($_SESSION['role'] == 'admin') {
+            header("Location: ../admin/adminpanel.php");
+            exit;
+        } else {
+            header("Location: ../BOOKS/home.php");
+            exit;
         }
-    }else{
-        ?>
+    } else {
+        echo "<script>alert('بيانات غير صحيحة');</script>";
+    }
+}
+?>
 <form method="POST">
     <div class="container">
     <h1 style="color: black;"> تسجيل الدخول</h1>
@@ -97,9 +90,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     <a href="" >نسيت كلمة السر</a><br><br>
     <a href="../USERS/singup.php">ليس لديك حساب</a>
             </form>
-        <?php
-}
-?>
         </div>
     </main>
 </body>

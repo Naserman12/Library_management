@@ -56,30 +56,36 @@ session_start();
 </head>
 <body>
     <main>
-    <?php
+        <?php
+include '../include/db_connect.php';
+session_start();
+
 if (isset($_POST['add'])) {
-    $ADemail = $_POST['email'] ?? '';
-    $ADpassword = $_POST['password'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-    if (empty($ADemail) || empty($ADpassword)) {
-        
-        echo "'<script>alert ('الرجاء ادخال كلمة السر والبريد الاكتروني')</script>'";
-    }else{
-        $query= "SELECT * FROM admin WHERE email='$ADemail' AND password='$ADpassword'";
-        $result = mysqli_query($conn, $query);
-        // echo $ADemail.'<br> Result is:'.$result ;
-         if (mysqli_num_rows($result) >0) {
-        $_SESSION['email']= $ADemail;
-        echo "'<script>alert ('الرجاء الانتظار سيتم نتقلك الى صفحة التحكم')</script>'";
-        header( "REFRESH:1; URL = adminpanel.php");
-    }else{
-        echo "'<script>alert ('الرجاء الانتظار سيتم نتقلك الى المتجر')</script>'";
-        header( "REFRESH:1; URL = ../index.php");
+    if (empty($email) || empty($password)) {
+        echo "<script>alert('الرجاء إدخال البريد وكلمة السر');</script>";
+    } else {
+        $query = "SELECT * FROM admin WHERE email=? AND password=?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ss", $email, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
+        if ($result->num_rows > 0) {
+            $_SESSION['role'] = 'admin';
+            $_SESSION['email'] = $email;
+
+            header("Location: adminpanel.php");
+            exit;
+        } else {
+            echo "<script>alert('بيانات غير صحيحة');</script>";
+        }
     }
 }
-}
 ?>
+
         <div class="container">
             <h1>تسجيل الدخول </h1>
             <form action="" method="post">
