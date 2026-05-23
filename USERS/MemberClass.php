@@ -66,7 +66,7 @@ class Member{
         $_SESSION['user_name'] = $name;
 
         // setFlash('success', 'تم إنشاء الحساب بنجاح');
-        echo "تم إنشاء الحساب بنجاح";
+        // echo "تم إنشاء الحساب بنجاح";
         header("REFRESH:3; URL = ../BOOKS/home.php");
         return true;
     }
@@ -150,7 +150,7 @@ public function login($email, $password)
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($result) > 0) {
-        setFlash('error', 'تم استعارة الكتاب مسبقاً');
+        // setFlash('error', 'تم استعارة الكتاب مسبقاً');
         header("REFRESH:3; URL = ../BOOKS/home.php");
         return false;
     }
@@ -255,7 +255,7 @@ public function returnBook($bookId){
     ]);
 
     // setFlash('success', 'تم إرجاع الكتاب.');
-        echo "تم إرجاع الكتاب.";
+        // echo "تم إرجاع الكتاب.";
     header("REFRESH:3; URL = ../BOOKS/home.php");
     return true;
 }
@@ -290,7 +290,7 @@ public function updateBorrowStatus($bookId, $status){
     ]);
 
     // setFlash('success', 'تم تحديث الحالة.');
-    echo "تم تحديث الحالة.";
+    // echo "تم تحديث الحالة.";
      header("REFRESH:3; URL = ../BOOKS/home.php");
 }
 // <//--==========تحديث حالة الطلب==========--//>

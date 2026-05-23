@@ -1,10 +1,13 @@
 <?php
-include 'MemberClass.php';
-// include "../include/flash.php";
-$member = new Member($conn);
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+include 'MemberClass.php';
+// include "../include/flash.php";
+$member = new Member($conn);
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $member->name = $_POST['name'];
     $member->phone = $_POST['phone'];
@@ -21,12 +24,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 );
    if($select){
     // setFlash('success', 'تم التسجيل بنجاح');
-    echo "تم التسجيل بنجاح";
+    // echo "تم التسجيل بنجاح";
     header("Location: ../BOOKS/home.php");
     exit;
 } else {
     // setFlash('error', 'فشل في التسجيل');
-    echo "<script>alert('فشل في التسجيل');</script>";
+    // echo "<script>alert('فشل في التسجيل');</script>";
     header("Location: register.php");
     exit;
 }
