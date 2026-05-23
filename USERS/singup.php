@@ -1,7 +1,9 @@
 <?php
 include 'MemberClass.php';
 $member = new Member($conn);
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $member->name = $_POST['name'];
     $member->phone = $_POST['phone'];
@@ -75,7 +77,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
     </style>
 <h1>تسجيل مستخدم جديد</h1>
-<form action="" method="POST" enctype="multipart/form-data">
+<form action="../BOOKS/home.php" method="POST" enctype="multipart/form-data">
     <div class=".container">
     <input class="Inpt" required placeholder="الاسم" type="text" name="name" > <br>
     <input class="Inpt" required placeholder="البريد الاكتروني" type="email" name="email"> <br>

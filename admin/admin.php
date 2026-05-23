@@ -1,6 +1,8 @@
 <?php
 include '../include/db_connect.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,8 +59,6 @@ session_start();
 <body>
     <main>
         <?php
-include '../include/db_connect.php';
-session_start();
 
 if (isset($_POST['add'])) {
     $email = $_POST['email'] ?? '';

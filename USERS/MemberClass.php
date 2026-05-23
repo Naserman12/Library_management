@@ -141,7 +141,9 @@ class Member{
     // }
     public function login($email, $password)
 {
+    if (session_status() === PHP_SESSION_NONE) {
     session_start();
+    }
 
     $sql = "SELECT * FROM member WHERE email = :email LIMIT 1";
     $stmt = $this->conn->prepare($sql);
