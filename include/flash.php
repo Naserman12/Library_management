@@ -4,8 +4,6 @@ function setFlash($type, $message) {
     setcookie('flash_type', $type, time() + 5, "/");
     setcookie('flash_message', $message, time() + 5, "/");
 }
-
-
 function getFlash() {
     if (isset($_COOKIE['flash_type']) && isset($_COOKIE['flash_message'])) {
 
