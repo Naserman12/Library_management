@@ -1,6 +1,6 @@
 
 <?php
-require_once '../include/session.php';
+// require_once '../include/session.php';
 //  include '../include/db_connect.php';
 //  require_once '../BOOKS/Book.php';
 //  require $_SERVER['DOCUMENT_ROOT']. '/BOOKS/Book.php';

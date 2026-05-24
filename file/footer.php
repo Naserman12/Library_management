@@ -1,22 +1,4 @@
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const toggleButton = document.querySelector(".user-toggle");
-    const dropdown = document.getElementById("userDropdown");
 
-    toggleButton.addEventListener("click", function (event) {
-      event.stopPropagation(); // يمنع الإغلاق الفوري
-      dropdown.classList.toggle("active"); // استخدم "active" بدل "show"
-    });
-
-    // إغلاق القائمة عند الضغط خارجها
-    window.addEventListener("click", function (event) {
-      const userMenu = document.getElementById("userMenu");
-      if (!userMenu.contains(event.target)) {
-        dropdown.classList.remove("active");
-      }
-    });
-  });
-</script>
 
 
 <!-- foooter -->

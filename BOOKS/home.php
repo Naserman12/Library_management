@@ -199,3 +199,36 @@ if ($flash) {
 <a href="../USERS/Discussion/showDiscussions.php">المناقشات..</a>
 
 <?php include ("../file/footer.php"); ?>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const toggleButton = document.querySelector(".user-toggle");
+    const dropdown = document.getElementById("userDropdown");
+    const userMenu = document.getElementById("userMenu");
+
+    // تأكد أن العناصر موجودة
+    if (toggleButton && dropdown && userMenu) {
+
+        toggleButton.addEventListener("click", function (event) {
+
+            event.stopPropagation();
+
+            dropdown.classList.toggle("active");
+
+        });
+
+        // إغلاق القائمة عند الضغط خارجها
+        window.addEventListener("click", function (event) {
+
+            if (!userMenu.contains(event.target)) {
+
+                dropdown.classList.remove("active");
+
+            }
+
+        });
+
+    }
+
+});
+</script>
