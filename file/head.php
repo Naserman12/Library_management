@@ -1,11 +1,11 @@
 <?php
-require_once  '/../include/session.php';
-require_once  '/../include/db_connect.php';
+require_once  '../include/session.php';
+require_once  '../include/db_connect.php';
 
 $dailyPrice = 4;
 ?>
 <!DOCTYPE html>
-<html lang="ar">
+<html dir="rtl" lang="ar">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

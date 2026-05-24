@@ -15,11 +15,9 @@ if(isset($_SESSION["memberId"])){
 /* =========================
    🔧 1. تعديل البحث هنا
    ========================= */
-   $searchTerm = $_GET['search'] ?? null;
+$searchTerm = $_GET['search'] ?? null;
 $book = new Book($conn);
 $category = new category($conn);
-
-
 
 if (!empty($searchTerm)) {
     $books = $book->searchBooks($searchTerm);
