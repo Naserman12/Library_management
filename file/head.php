@@ -1,5 +1,5 @@
 <?php
-require_once '../include/session.php';
+// require_once '../include/session.php';
 require_once '../include/db_connect.php';
 
 // require_once $_SERVER['DOCUMENT_ROOT']. '/../BOOKS/category.php';
