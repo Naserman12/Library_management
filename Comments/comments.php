@@ -72,7 +72,7 @@ class Comments
 
                 echo "تم إضافة التعليق بنجاح";
 
-                header("Refresh:2; url=../BOOKS/home.php");
+                header("Location: showBookDetiles.php?id=" . $bookId);
                 exit;
 
             } else {

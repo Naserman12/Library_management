@@ -3,6 +3,7 @@ require_once '../include/session.php';
 require_once '../include/db_connect.php';
 require_once "../file/head.php";
 require_once '../BOOKS/category.php';
+require_once 'comments.php';
 ?>
 <title>تفاصيل الكتاب</title>
 
@@ -72,7 +73,6 @@ require_once '../BOOKS/category.php';
 <div class="showBooksContainer">
     <h1>عرض تفاصيل الكتاب</h1>
     <?php
-    require_once 'comments.php';
     $book = new Book($conn);
     $comment = new Comments($conn);
     $book_id = $_GET['book_id'];
