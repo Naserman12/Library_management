@@ -1,6 +1,3 @@
-
-
-
 <!-- foooter -->
 <footer>
     <!-- <div class="google_maps">
