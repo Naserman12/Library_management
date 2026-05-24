@@ -2,7 +2,7 @@
 require_once '../include/session.php';
 require_once '../include/db_connect.php';
 require_once "../file/head.php";
-include 'MemberClass.php';
+require_once "./MemberClass.php";
 // include "../include/flash.php";
 $member = new Member($conn);
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -28,7 +28,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 } else {
     // setFlash('error', 'فشل في التسجيل');
     // echo "<script>alert('فشل في التسجيل');</script>";
-    header("Location: register.php");
+    header("Location: signup.php");
     exit;
 }
 }else{

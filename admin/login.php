@@ -67,15 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $password = trim($_POST['password']);
 
     $login = $member->login($email, $password);
-
     if ($login) {
-        if ($_SESSION['role'] == 'admin') {
-            header("Location: ../admin/adminpanel.php");
-            exit;
-        } else {
             header("Location: ../BOOKS/home.php");
-            exit;
-        }
+            exit;    
     } else {
         echo "<script>alert('بيانات غير صحيحة');</script>";
     }
