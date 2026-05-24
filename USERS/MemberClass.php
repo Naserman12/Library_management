@@ -24,9 +24,7 @@ class Member{
     //  <--------دالة تسجيل الاعضاء-------->
    public function register($name, $email, $avatar, $phone, $password, $role = 'members')
 {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
+    require_once '../include/session.php';
 
     $check = $this->conn->prepare("SELECT id FROM member WHERE email = :email");
     $check->execute(['email' => trim($email)]);
@@ -54,7 +52,10 @@ class Member{
 
     if ($result) {
 
-        $memberId = $this->conn->lastInsertId();
+        if (!isset($_SESSION['regenerated'])) {
+            session_regenerate_id(true);
+            $_SESSION['regenerated'] = true;
+        }
 
         $_SESSION['memberId'] = $memberId;
         $_SESSION['role'] = $role;
@@ -96,10 +97,11 @@ public function login($email, $password)
             return false;
         }
             // مهم جداً: تأكد session شغالة
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-          session_regenerate_id(true); 
+       require_once '../include/session.php';
+       if (!isset($_SESSION['regenerated'])) {
+        session_regenerate_id(true);
+        $_SESSION['regenerated'] = true;
+       }
         // تخزين بيانات الجلسة
         $_SESSION['memberId'] = $user['id'];
         $_SESSION['role'] = $user['role'];
@@ -118,16 +120,13 @@ public function login($email, $password)
     // <---------دالة تسخيل الخروج-------->
     public function logout(){
         // بدء الجلسة إذا لم تكن بدات بالفعل
-        if(session_status() == PHP_SESSION_NONE){
-            session_start();
-        }
-        session_unset(); #إزالة جميع متغيرات الجلسة
+      require_once '../include/session.php';
+      $_SESSION = [];
         // انهاء الجلسة مع حذف البيانات المخرنة وتسجيل الخروج
         session_destroy();
         // setFlash('success', 'تم تسجيل الخروج بنجاح');
-        echo "تم تسجيل الخروج بنجاح";
-        // نقل المستخدم الى صفحة تسجيل الدخول
-        return true;
+        header('location: ../admin/login.php'); // نقل المستخدم الى الصفحة الرئيسية
+        exit();
     }
     // <//---------دالة تسخيل الخروج--------//>
     // <---------دالة استعارة الكتب-------->

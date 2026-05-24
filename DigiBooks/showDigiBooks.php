@@ -89,13 +89,17 @@ $result = $Digibook->getDigiBooks();
           <p>المؤلف: <?php echo $book['author']; ?></p>
           <p>سنة النشر: <?php echo $book['year']; ?></p>
           <p>النوع: <?php echo $book['bookType']; ?></p>
-          <a href="../<?php echo $book['file_name']; ?>" download class="download-btn">تحميل</a>
+          <a href="../books_files/<?php echo urlencode($book['file_name']); ?>" 
+   download 
+   class="download-btn">
+   تحميل
+</a>
+
           <a href="showDigiBooks.php?file=<?php echo urlencode($book['file_name']); ?>" class="download-btn">قراءة</a>
         </div>
       <?php endforeach; ?>
     </main>
 <?php endif; ?>
 <?php include ("../file/footer.php"); ?>
-<?php mysqli_close($conn); ?>
 </body>
 </html>

@@ -38,7 +38,7 @@ if (!empty($books)) {
 
 <main>
     <?php
-require_once __DIR__ . '/../include/flash.php';
+require_once '../include/flash.php';
 
 $flash = getFlash();
 
