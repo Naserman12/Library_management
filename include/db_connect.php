@@ -1,13 +1,18 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
 
-$host = getenv('DB_HOST');
-$db   = getenv('DB_DATABASE');
-$user = getenv('DB_USERNAME');
-$pass = getenv('DB_PASSWORD');
-$port = getenv('DB_PORT') ?: 3306;
+// تحميل .env فقط في المحلي
+if (file_exists(__DIR__ . '/../.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+    $dotenv->safeLoad();
+}
+
+// قراءة المتغيرات من SERVER أولاً (Railway)
+$host = $_SERVER['DB_HOST']     ?? $_ENV['DB_HOST']     ?? null;
+$db   = $_SERVER['DB_DATABASE'] ?? $_ENV['DB_DATABASE'] ?? null;
+$user = $_SERVER['DB_USERNAME'] ?? $_ENV['DB_USERNAME'] ?? null;
+$pass = $_SERVER['DB_PASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? null;
+$port = $_SERVER['DB_PORT']     ?? $_ENV['DB_PORT']     ?? 3306;
 
 try {
     $conn = new PDO(
@@ -16,10 +21,7 @@ try {
         $pass
     );
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 } catch (PDOException $e) {
     die("Connection Failed: " . $e->getMessage());
 }
-// $conn = mysqli_connect('localhost','root','','Libey') or die('فشل الاتصال بقاعدة البيانات');
-// // إعدادات بايبال
-// require_once "config.php";
-?>
