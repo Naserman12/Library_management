@@ -1,6 +1,6 @@
 <?php
-require_once '../file/head.php';
-include 'Book.php';
+// include_once '../include/db_connect.php'; // اتصال PDO
+include_once 'Book.php';
 
 class category {
     private $conn;

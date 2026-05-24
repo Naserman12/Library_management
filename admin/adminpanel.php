@@ -1,8 +1,8 @@
 <?php
+require_once '../include/session.php';
+require_once '../include/db_connect.php'; // اتصال PDO
 include_once '../BOOKS/category.php';
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

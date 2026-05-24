@@ -1,6 +1,6 @@
 <?php
     // require_once $_SERVER['DOCUMENT_ROOT']. '/include/db_connect.php';
-    // require_once __DIR__ . '/../include/db_connect.php';
+    require_once '../include/db_connect.php';
     // require_once __DIR__ . '/../include/flash.php';
     
     // include 'category.php';
