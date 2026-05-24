@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../include/session.php';
 include '../MemberClass.php';
 
 // التأكد من أن المستخدم مسجّل الدخول

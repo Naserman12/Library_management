@@ -1,10 +1,6 @@
-<style>
-  body{
-    background-color: black;
-    color: antiquewhite;
-  }
-</style>
+
 <?php
+require_once '../include/session.php';
 //  include '../include/db_connect.php';
 //  require_once '../BOOKS/Book.php';
 //  require $_SERVER['DOCUMENT_ROOT']. '/BOOKS/Book.php';
@@ -433,6 +429,12 @@ public function updateProfile($name, $email, $phone, $avatar, $user_id){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة الأعضاء</title>
+    <style>
+  body{
+    background-color: black;
+    color: antiquewhite;
+  }
+</style>
 </head>
 <body>
    <h1></h1>

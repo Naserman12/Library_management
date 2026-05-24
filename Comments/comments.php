@@ -1,6 +1,6 @@
 <?php
-
-require_once '../include/init.php';
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
 
 class Comments
 {

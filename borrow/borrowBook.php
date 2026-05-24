@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../include/session.php';
 include '../include/db_connect.php'; // يحتوي على اتصال PDO
 
 // جلب الطلبات المعلقة

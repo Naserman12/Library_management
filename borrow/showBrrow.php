@@ -1,4 +1,5 @@
 <?php
+require_once '../include/session.php';
 include '../include/db_connect.php'; // اتصال PDO
 
 // استعلام ملخص الكتب

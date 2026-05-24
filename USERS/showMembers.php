@@ -1,4 +1,5 @@
 <?php
+require_once '../include/session.php';
 include_once '../BOOKS/Book.php';
 
 $sql = "SELECT id, name, email, phone, role FROM member";

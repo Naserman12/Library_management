@@ -1,6 +1,6 @@
 <?php
+require_once '../include/session.php';
 include '../include/db_connect.php'; // اتصال PDO
-session_start();
 
 if (!isset($_SESSION['memberId'])) {
     echo 'لا يمكنك الوصول إلى هذه الصفحة بدون تسجيل الدخول.';

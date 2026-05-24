@@ -1,4 +1,8 @@
-
+<?php
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
+require_once '../USERS/MemberClass.php';
+?>
 <!--============== style================ -->
 <style>
     body{
@@ -49,8 +53,6 @@
 <body>
     <main>
 <?php
-require_once '../include/db_connect.php';
-require_once '../USERS/MemberClass.php';
 
 $member = new Member($conn);
 

@@ -1,4 +1,5 @@
 <?php
+require_once '../include/session.php';
 include 'MemberClass.php';
 // include "../include/flash.php";
 $member = new Member($conn);
