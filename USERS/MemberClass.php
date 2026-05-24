@@ -24,7 +24,6 @@ class Member{
     //  <--------دالة تسجيل الاعضاء-------->
    public function register($name, $email, $avatar, $phone, $password, $role = 'members')
 {
-    require_once '../include/session.php';
 
     $check = $this->conn->prepare("SELECT id FROM member WHERE email = :email");
     $check->execute(['email' => trim($email)]);
@@ -52,10 +51,9 @@ class Member{
 
     if ($result) {
 
-        if (!isset($_SESSION['regenerated'])) {
-            session_regenerate_id(true);
-            $_SESSION['regenerated'] = true;
-        }
+        $memberId = $this->conn->lastInsertId();
+
+        session_regenerate_id(true);
 
         $_SESSION['memberId'] = $memberId;
         $_SESSION['role'] = $role;
@@ -97,12 +95,8 @@ public function login($email, $password)
             return false;
         }
             // مهم جداً: تأكد session شغالة
-       require_once '../include/session.php';
-       if (!isset($_SESSION['regenerated'])) {
         session_regenerate_id(true);
-        $_SESSION['regenerated'] = true;
-       }
-        // تخزين بيانات الجلسة
+
         $_SESSION['memberId'] = $user['id'];
         $_SESSION['role'] = $user['role'];
         $_SESSION['user_name'] = $user['name'];
@@ -120,7 +114,6 @@ public function login($email, $password)
     // <---------دالة تسخيل الخروج-------->
     public function logout(){
         // بدء الجلسة إذا لم تكن بدات بالفعل
-      require_once '../include/session.php';
       $_SESSION = [];
         // انهاء الجلسة مع حذف البيانات المخرنة وتسجيل الخروج
         session_destroy();
