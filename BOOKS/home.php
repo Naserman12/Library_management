@@ -3,7 +3,7 @@ require_once "../file/head.php";
 
 if(isset($_SESSION["memberId"])){
     require_once "../showNews.php";
-    var_dump($_SESSION);
+    // var_dump($_SESSION);
 }else{
     echo '<h3>سجل دخول لتتمكن من استعارة الكتب والمزيد!!<br></h3>';
 }

@@ -1,4 +1,5 @@
 <?php
+require_once '../file/head.php';
 include 'Book.php';
 
 class category {
