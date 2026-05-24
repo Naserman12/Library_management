@@ -1,7 +1,7 @@
 
 <?php
-// include '../include/db_connect.php';
-// include 'Book.php';
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
 include 'category.php';
 $category = new Category($conn);
 // التحقق من معرف الكتاب 

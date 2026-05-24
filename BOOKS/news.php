@@ -1,26 +1,5 @@
-<style>
-    .news-ticker, .latest-additions {
-        background-color: #f8f9fa;
-        padding: 10px;
-        border: 1px solid #dee2e6;
-        margin-bottom: 20px;
-    }
-
-    .news-ticker h2, .latest-additions h2 {
-        margin: 0 0 10px;
-    }
-
-    .news-ticker ul, .latest-additions ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    .news-ticker li, .latest-additions li {
-        margin-bottom: 5px;
-    }
-</style>
-
 <?php
+require_once '../include/session.php';
 include '../include/db_connect.php'; // اتصال PDO
 
 function get_best_books($conn) {
@@ -81,3 +60,24 @@ function lastAdded($conn) {
 get_best_books($conn);
 lastAdded($conn);
 ?>
+<style>
+    .news-ticker, .latest-additions {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        margin-bottom: 20px;
+    }
+
+    .news-ticker h2, .latest-additions h2 {
+        margin: 0 0 10px;
+    }
+
+    .news-ticker ul, .latest-additions ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .news-ticker li, .latest-additions li {
+        margin-bottom: 5px;
+    }
+</style>

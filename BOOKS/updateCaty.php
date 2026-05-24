@@ -1,9 +1,7 @@
-<style>
-    body{
-        background-color: black;
-    }
-</style>
+
 <?php
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
 include 'category.php';
 $category = new category($conn);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -1,5 +1,6 @@
 <?php
-include '../include/db_connect.php';
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
 
 class Book_reports {
     public $conn;

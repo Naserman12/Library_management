@@ -1,4 +1,6 @@
 <?php
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
 // include_once '../include/db_connect.php'; // اتصال PDO
 include_once 'Book.php';
 

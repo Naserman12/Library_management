@@ -1,12 +1,7 @@
-<style>
-  body{
-    background-color:black;
-    color: antiquewhite;
-    align-items: center;
-    text-align: center;
-  }
-</style>
+
 <?php
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
 require_once __DIR__ . '/category.php';
 require_once __DIR__ . '/Book.php';
 // require_once __DIR__ . '/DigitalBook.php';

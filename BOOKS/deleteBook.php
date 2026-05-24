@@ -1,4 +1,6 @@
 <?php
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
 include 'Book.php';
 $book = new Book($conn);
 if (isset($_GET['id'])) {

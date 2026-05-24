@@ -1,9 +1,7 @@
-<style>
-    body{
-        background-color: black;
-    }
-</style>
+
 <?php
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
 // include '../include/db_connect.php';
 include 'category.php';
 // التحقق من معرف الكتاب 

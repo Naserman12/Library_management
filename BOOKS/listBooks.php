@@ -1,3 +1,7 @@
+<?php
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
+?>
 <div class="content_sec"> 
   <form action="adminpanel.php" method="GET">
     <!-- تحديث نتائج البحث -->
