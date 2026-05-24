@@ -11,13 +11,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $member->email = $_POST['email'];
     $member->password = $_POST['password'];
     $member->avatar = $_POST['avatar'] ?? 'man.png';
+    $member->role = 'members';
     $select = $member->register(
     $member->name,
     $member->email,
     $member->avatar,
     $member->phone,
     $member->password,
-    'members'
+    $member->role
 );
    if($select){
     // setFlash('success', 'تم التسجيل بنجاح');

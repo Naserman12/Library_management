@@ -62,7 +62,7 @@ class Member{
         // setFlash('success', 'تم إنشاء الحساب بنجاح');
         // echo "تم إنشاء الحساب بنجاح";
         header("Location: ../BOOKS/home.php");
-        return true;
+        exit();
     }
 
     setFlash('error', 'حدث خطأ أثناء التسجيل');
@@ -101,7 +101,8 @@ public function login($email, $password)
         $_SESSION['role'] = $user['role'];
         $_SESSION['user_name'] = $user['name'];
 
-        return true;
+        header("Location: ../BOOKS/home.php");
+        exit();
 
     } catch (PDOException $e) {
 
