@@ -1,13 +1,9 @@
 <?php
 // بناء جلسة
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-// حدف لكل المنشن التي تم حفظها داخل الموقع
-session_unset();
-// تدمير الجلسة
-session_destroy();
-// mysqli_close($conn);
+require_once 'include/session.php';
+require_once 'include/db_connect.php';
+
+
 ?>
 
 <!DOCTYPE html>
