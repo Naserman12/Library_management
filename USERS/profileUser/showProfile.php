@@ -1,6 +1,6 @@
 <?php
-session_start();
-require_once "../../include/db_connect.php";
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
 if(!isset($_SESSION['memberId'])){
     setFlash('error', 'يجب تسجيل الدخول لعرض هذه الصفحة!!.');
     header( "REFRESH:3; URL = ../../admin/login.php");
