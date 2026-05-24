@@ -1,5 +1,6 @@
 <?php
 require_once '../include/session.php';
+require_once '../include/db_connect.php';
 require_once "../file/head.php";
 require_once '../BOOKS/category.php';
 if(isset($_SESSION["memberId"])){
@@ -9,13 +10,15 @@ if(isset($_SESSION["memberId"])){
     echo '<h3>سجل دخول لتتمكن من استعارة الكتب والمزيد!!<br></h3>';
 }
 
+
 /* =========================
    🔧 1. تعديل البحث هنا
    ========================= */
+   $searchTerm = $_GET['search'] ?? null;
 $book = new Book($conn);
 $category = new category($conn);
 
-$searchTerm = $searchTerm ?? null;
+
 
 if (!empty($searchTerm)) {
     $books = $book->searchBooks($searchTerm);

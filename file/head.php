@@ -1,5 +1,6 @@
 <?php
-require_once '../include/db_connect.php';
+require_once __DIR__ . '/../include/session.php';
+require_once __DIR__ . '/../include/db_connect.php';
 
 $dailyPrice = 4;
 ?>
