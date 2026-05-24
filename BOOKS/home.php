@@ -1,6 +1,7 @@
 <?php
+require_once '../include/session.php';
 require_once "../file/head.php";
-
+require_once '../BOOKS/category.php';
 if(isset($_SESSION["memberId"])){
     require_once "../showNews.php";
     // var_dump($_SESSION);
@@ -14,7 +15,7 @@ if(isset($_SESSION["memberId"])){
 $book = new Book($conn);
 $category = new category($conn);
 
-$searchTerm = $seachTerm ?? null;
+$searchTerm = $searchTerm ?? null;
 
 if (!empty($searchTerm)) {
     $books = $book->searchBooks($searchTerm);

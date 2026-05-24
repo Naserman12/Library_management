@@ -1,11 +1,6 @@
 <?php
-require_once '../include/session.php';
 require_once '../include/db_connect.php';
 
-// require_once $_SERVER['DOCUMENT_ROOT']. '/../BOOKS/category.php';
-require_once '../BOOKS/category.php';
-
-// require_once $_SERVER['DOCUMENT_ROOT']. '/library/USERS/MemberClass.php';
 $dailyPrice = 4;
 ?>
 <!DOCTYPE html>
@@ -31,10 +26,7 @@ $dailyPrice = 4;
       </div>
       <!--// logo // -->
       <?php
-$book = new Book($conn);
- $category = new category($conn);
-
-            $seachTerm = $_GET['search'] ?? null;
+            $searchTerm = $_GET['search'] ?? null;
         ?>
         <!-- search -->
                 <div class="search">
