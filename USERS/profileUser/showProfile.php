@@ -2,8 +2,8 @@
 require_once '../../include/session.php';
 require_once '../../include/db_connect.php';
 if(!isset($_SESSION['memberId'])){
-    setFlash('error', 'يجب تسجيل الدخول لعرض هذه الصفحة!!.');
-    header( "REFRESH:3; URL = ../../admin/login.php");
+    // setFlash('error', 'يجب تسجيل الدخول لعرض هذه الصفحة!!.');
+    header( "Location: ../../admin/login.php");
 }
  
         // جلب بيانات المستخدم من قاعدة البيانات
