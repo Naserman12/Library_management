@@ -1,6 +1,7 @@
 <?php
 require_once '../include/session.php';
-include '../include/db_connect.php'; // يحتوي على اتصال PDO
+require_once '../include/db_connect.php';
+require_once "../file/head.php";
 
 // جلب الطلبات المعلقة
 $sql = "SELECT borrow_records.id, books.title, books.image, member.name, borrow_records.borrow_date 

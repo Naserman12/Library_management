@@ -1,6 +1,9 @@
 <?php
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
+require_once "../file/head.php";
 include '../USERS/MemberClass.php';
-session_start();
+
 $member = new Member($conn);
 
 $member->id = $_SESSION['memberId'];

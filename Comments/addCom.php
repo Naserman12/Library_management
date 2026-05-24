@@ -1,5 +1,7 @@
 <?php
-// require_once '../USERS/MemberClass.php';
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
+require_once "../file/head.php";
 session_start();
 if(isset($_SESSION['memberId'])){
 ?>

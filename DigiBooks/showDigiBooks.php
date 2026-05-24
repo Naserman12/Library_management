@@ -1,5 +1,7 @@
 <?php
-require '../file/head.php';
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
+require_once "../file/head.php";
 include_once '../BOOKS/category.php';
 
 if(isset($_SESSION["memberId"])){

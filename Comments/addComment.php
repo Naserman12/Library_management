@@ -1,5 +1,7 @@
 <?php
-session_start();
+require_once '../include/session.php';
+require_once '../include/db_connect.php';
+require_once "../file/head.php";
 require_once 'comments.php';
 if(isset($_POST['AddComm'])){
 $book_id = $_POST['book_id'];
